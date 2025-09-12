@@ -168,7 +168,7 @@ export default function MonthlyVisionPage() {
             </CardContent></Card>
 
             <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-6">
-                <Card><CardHeader><CardTitle className="text-base">Como me preparo?</CardTitle></CardHeader><CardContent><Textarea value={visionData.preparation_notes} onChange={e => handleDynamicChange('preparation_notes', e.target.value)} className="min-h-[120px] w-full" /></CardContent></Card>
+                <Card><CardHeader><CardTitle className="text-base">Como devo me preparar?</CardTitle></CardHeader><CardContent><Textarea value={visionData.preparation_notes} onChange={e => handleDynamicChange('preparation_notes', e.target.value)} className="min-h-[120px] w-full" /></CardContent></Card>
                 <Card><CardHeader><CardTitle className="text-base">Como serei o meu melhor?</CardTitle></CardHeader><CardContent><Textarea value={visionData.best_version_notes} onChange={e => handleDynamicChange('best_version_notes', e.target.value)} className="min-h-[120px] w-full" /></CardContent></Card>
                 <Card><CardHeader><CardTitle className="text-base">Como seria o meu mês ideal?</CardTitle></CardHeader><CardContent><Textarea value={visionData.ideal_month_vision} onChange={e => handleDynamicChange('ideal_month_vision', e.target.value)} className="min-h-[120px] w-full" /></CardContent></Card>
             </div>

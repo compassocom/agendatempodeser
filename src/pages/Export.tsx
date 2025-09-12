@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { Button } from '@/Components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/Card';
-import { Input } from '@/Components/ui/Input';
-import { Label } from '@/Components/ui/Label';
-import { Printer, Calendar as CalendarIcon, Loader2, FileText } from 'lucide-react';
-import { DailyPage, WeeklyPlanning, MonthlyVision, User, FutureVision } from '@/Entities/index'; // Adicionado FutureVision
-import PrintableDailyPage from '@/Components/export/PrintableDailyPage';
-import PrintableWeeklyPlanning from '@/Components/export/PrintableWeeklyPlanning';
-import PrintableMonthlyVision from '@/Components/export/PrintableMonthlyVision';
-import PrintableFutureVision from '@/Components/export/PrintableFutureVision'; // Adicionado
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+// NOVO: Ícone do carrinho adicionado para o banner
+import { Printer, Calendar as CalendarIcon, Loader2, FileText, ShoppingCart } from 'lucide-react'; 
+import { DailyPage, WeeklyPlanning, MonthlyVision, User, FutureVision } from '@/entities/index';
+import PrintableDailyPage from '@/components/export/PrintableDailyPage';
+import PrintableWeeklyPlanning from '@/components/export/PrintableWeeklyPlanning';
+import PrintableMonthlyVision from '@/components/export/PrintableMonthlyVision';
+import PrintableFutureVision from '@/components/export/PrintableFutureVision';
 import '@/print.css';
 
 const getInitialDateRange = () => {
@@ -55,8 +56,6 @@ export default function ExportPage() {
       const validMonthly = monthly.filter(p => p.id);
       const validFuture = future.filter(p => p.id);
       
-      console.log("DADOS ENCONTRADOS:", { meses: validMonthly, semanas: validWeekly, dias: validDaily, futuro: validFuture });
-
       setDataToExport({
         dailyPages: validDaily,
         weeklyPlannings: validWeekly,
@@ -86,6 +85,27 @@ export default function ExportPage() {
   return (
     <>
       <div className="min-h-[calc(100vh-200px)] print:hidden max-w-4xl mx-auto p-6 space-y-8 flex flex-col">
+        
+        {/* =================================================== */}
+        {/* === NOVO BANNER ADICIONADO ABAIXO === */}
+        {/* =================================================== */}
+        <Card className="bg-stone-800 dark:bg-stone-100 border-stone-700">
+            <CardContent className="p-6 flex flex-col md:flex-row items-center justify-between gap-6 text-left">
+                <div>
+                    <h3 className="text-xl font-bold text-black dark:text-black">Leve a jornada para o papel</h3>
+                    <p className="text-stone-600 dark:text-stone-600 mt-1 max-w-lg">
+                        Adquira a versão física da agenda "Tempo de Ser" para uma experiência de escrita mais profunda e offline.
+                    </p>
+                </div>
+                <a href="https://www.amazon.com.br/TEMPO-DE-SER-reflex%C3%B5es-autoconhecimento/dp/B0CK27YV27" target="_blank" rel="noopener noreferrer" className="flex-shrink-0 mt-4 md:mt-0">
+                    <Button size="lg" className="bg-white text-stone-900 hover:bg-stone-200 dark:bg-stone-900 dark:text-stone-100 dark:hover:bg-black w-full md:w-auto">
+                        <ShoppingCart className="w-5 h-5 mr-2" />
+                        Comprar o Livro Físico
+                    </Button>
+                </a>
+            </CardContent>
+        </Card>
+        
         <Card className="bg-white dark:bg-black/50">
           <CardHeader>
             <CardTitle className='text-2xl font-bold text-stone-800 dark:text-white'>Exportar sua Jornada</CardTitle>
@@ -146,4 +166,3 @@ export default function ExportPage() {
     </>
   );
 }
-
