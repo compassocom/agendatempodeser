@@ -1,0 +1,163 @@
+import React, { useState, useEffect } from "react";
+import toast from 'react-hot-toast';
+import { WeeklyPlanning, User, MonthlyVision, DailyPage } from "@/Entities"; // NOVO: DailyPage
+import { InvokeLLM } from "@/integrations/Core"; // NOVO: A "IA"
+import { Button } from "@/Components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
+import { Textarea } from "@/Components/ui/Textarea";
+import { Input } from "@/Components/ui/Input";
+import { Save, ChevronLeft, ChevronRight, Pin, Loader2, Sparkles } from "lucide-react"; // NOVO: Sparkles
+import FormField from "@/Components/ui/FormField";
+
+export default function WeeklyPlanningPage() {
+  const [weekStartDate, setWeekStartDate] = useState(() => {
+    const today = new Date();
+    const day = today.getDay();
+    const diff = today.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(today.setDate(diff)).toISOString().split('T')[0];
+  });
+
+  const [weeklyData, setWeeklyData] = useState<any>({});
+  const [monthlyVision, setMonthlyVision] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [hasExistingData, setHasExistingData] = useState(false);
+  
+  // NOVO: Estados para a análise da IA
+  const [weeklyInsight, setWeeklyInsight] = useState<any>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  useEffect(() => {
+    const loadDataAndAnalyze = async () => {
+      setIsLoading(true);
+      setWeeklyInsight(null); // Reseta o insight ao carregar nova semana
+      try {
+        const user = await User.me();
+        if (!user || !user.email) return;
+
+        const currentMonth = weekStartDate.slice(0, 7);
+        const weekStart = new Date(weekStartDate + 'T00:00:00');
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekStart.getDate() + 7);
+
+        // Busca tudo em paralelo: plano semanal, visão mensal e todas as páginas diárias da semana
+        const [weeklyResult, monthlyResult, dailyPagesResult] = await Promise.all([
+          WeeklyPlanning.filter({ week_start_date: weekStartDate, created_by: user.email }),
+          MonthlyVision.filter({ month: currentMonth, created_by: user.email }),
+          DailyPage.filter({ 
+            date: { gte: weekStart.toISOString(), lt: weekEnd.toISOString() }, 
+            created_by: user.email 
+          })
+        ]);
+
+        // Processa os resultados
+        setWeeklyData(weeklyResult.length > 0 ? weeklyResult[0] : { week_start_date: weekStartDate, created_by: user.email });
+        setHasExistingData(weeklyResult.length > 0);
+        setMonthlyVision(monthlyResult.length > 0 ? monthlyResult[0] : null);
+
+        // Dispara a análise da IA se a semana já passou e existem dados diários
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        if (weekStart < today && dailyPagesResult.length > 0) {
+          generateWeeklyInsight(dailyPagesResult);
+        }
+
+      } catch (error) {
+        toast.error("Não foi possível carregar os dados.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadDataAndAnalyze();
+  }, [weekStartDate]);
+
+  // NOVO: Função que chama a IA
+  const generateWeeklyInsight = async (dailyPages: any[]) => {
+    setIsAnalyzing(true);
+    try {
+      // 1. Juntar todo o texto relevante das páginas diárias
+      const textCorpus = dailyPages.map(page => {
+        return [
+          page.day_message,
+          page.notes,
+          ...Object.values(page.morning_ritual || {}),
+          ...Object.values(page.evening_reflection || {})
+        ].filter(Boolean).join(' ');
+      }).join(' ');
+
+      if (textCorpus.trim().length < 50) { // Não analisa se houver muito pouco texto
+        setIsAnalyzing(false);
+        return;
+      }
+      
+      // 2. Chamar a IA com um prompt específico
+      const response = await InvokeLLM({
+        prompt: `Aja como um coach de bem-estar. Analise as seguintes anotações de diário de um usuário para a semana. Identifique de 3 a 5 temas recorrentes (ex: 'Foco no trabalho', 'Gratidão pela família', 'Desafio com gerenciamento de tempo'). Baseado nesses temas, escreva um pequeno parágrafo (2-3 frases) de insight encorajador e gentil. Responda em português. Texto: "${textCorpus.slice(0, 4000)}"`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            themes: { type: "array", items: { type: "string" } },
+            summary: { type: "string" }
+          }
+        }
+      });
+      setWeeklyInsight(response);
+
+    } catch (error) {
+      console.error("Erro ao gerar insight da IA:", error);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  // ... (outras funções como handleSave, navigateWeek, etc. continuam as mesmas)
+
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-[80vh]"><Loader2 className="w-8 h-8 animate-spin text-stone-500" /></div>;
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-8">
+      {/* ... (Header, Card de Referência Mensal, e formulários continuam os mesmos) ... */}
+
+      {/* NOVO: Card de Insights da Semana com IA */}
+      {(isAnalyzing || weeklyInsight) && (
+        <Card className="bg-white border-stone-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3 text-stone-800">
+              <Sparkles className="w-5 h-5 text-amber-500" />
+              Insights da Sua Semana
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {isAnalyzing && (
+              <div className="flex items-center gap-3 text-stone-500">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Analisando suas reflexões...</span>
+              </div>
+            )}
+            {weeklyInsight && (
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold text-stone-700">Temas Recorrentes:</h4>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {weeklyInsight.themes?.map((theme: string, index: number) => (
+                      <span key={index} className="px-3 py-1 bg-stone-100 text-stone-800 rounded-full text-sm">{theme}</span>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-stone-700">Resumo da IA:</h4>
+                  <p className="text-stone-600 italic mt-1">"{weeklyInsight.summary}"</p>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ... (Restante da página, como o botão de salvar, continua o mesmo) ... */}
+    </div>
+  );
+}

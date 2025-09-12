@@ -1,0 +1,67 @@
+{
+  "name": "MonthlyVision",
+  "type": "object",
+  "properties": {
+    "month": {
+      "type": "string",
+      "description": "Mês no formato YYYY-MM"
+    },
+    "year": {
+      "type": "integer",
+      "description": "Ano"
+    },
+    "major_projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "first_steps": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Os 3 principais projetos do mês"
+    },
+    "major_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "preparation": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Eventos cruciais do mês"
+    },
+    "monthly_calendar": {
+      "type": "object",
+      "description": "Eventos por dia do mês"
+    },
+    "preparation_notes": {
+      "type": "string",
+      "description": "Como me preparar?"
+    },
+    "best_version_notes": {
+      "type": "string",
+      "description": "Como serei minha melhor versão?"
+    },
+    "ideal_month_vision": {
+      "type": "string",
+      "description": "Como seria meu mês ideal?"
+    }
+  },
+  "required": [
+    "month",
+    "year"
+  ]
+}

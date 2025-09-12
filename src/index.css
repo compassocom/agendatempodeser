@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* REGRA GLOBAL PARA FORÇAR O PADDING */
+input, textarea {
+    /* Equivalente a py-2 px-3, com !important para garantir a prioridade */
+    padding: 0.5rem 0.75rem !important;
+}
+/* ... suas outras regras de CSS ... */
+
+/* Estilos para o calendário de progresso */
+/* --- Estilos para o Calendário de Progresso --- */
+
+/* Contêiner principal do calendário - o tornamos 100% responsivo */
+.react-calendar {
+  width: 100%;
+  border: none;
+  font-family: inherit;
+  line-height: 1.5em; /* Melhora o espaçamento vertical */
+}
+
+/* Remove a borda dos botões de navegação */
+.react-calendar__navigation button {
+  border: none !important;
+  background: none !important;
+}
+
+/* Estiliza os botões de navegação (mês/ano) */
+.react-calendar__navigation__label {
+  font-weight: 700 !important; /* Deixa o texto em negrito */
+}
+
+/* Estiliza os dias da semana (Seg, Ter, etc.) */
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none; /* Remove o sublinhado */
+  font-weight: 600; /* Deixa em semi-negrito */
+}
+
+/* Estilo para cada "bloco" de dia no calendário */
+.react-calendar__tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px; /* Altura fixa para manter a proporção */
+  border-radius: 0.5rem; /* Bordas arredondadas */
+}
+
+/* Efeito hover para os dias */
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #f5f5f4; /* Cor stone-100 */
+}
+
+/* Estilo para o dia de hoje */
+.react-calendar__tile--now {
+  background: #e7e5e4; /* Cor stone-200 */
+}
+.react-calendar__tile--now:enabled:hover,
+.react-calendar__tile--now:enabled:focus {
+  background: #d6d3d1; /* Cor stone-300 */
+}
+
+/* Círculo que destaca o dia preenchido */
+.highlight-day {
+  background-color: #a8a29e; /* Cor stone-400 */
+  border-radius: 50%;
+  color: white;
+}
+.highlight-day:hover {
+    background-color: #78716c !important; /* Cor stone-500 */
+}
+
+/* =============================================== */
+/* === ESTILOS DARK MODE PARA O REACT-CALENDAR === */
+/* =============================================== */
+
+/* --- Container Principal --- */
+.dark .react-calendar {
+  @apply bg-gray-800 border-gray-700 text-stone-200 rounded-lg;
+}
+
+/* --- Navegação (Setas e Mês/Ano) --- */
+.dark .react-calendar__navigation button {
+  @apply text-stone-200 hover:bg-gray-700 focus:bg-gray-700;
+}
+
+.dark .react-calendar__navigation button:disabled {
+  @apply bg-transparent text-gray-500;
+}
+
+/* --- Nomes dos dias da semana (Dom, Seg, Ter...) --- */
+.dark .react-calendar__month-view__weekdays__weekday {
+  @apply text-amber-400 font-bold; /* Cor de destaque para os dias da semana */
+}
+
+/* --- Estilo geral dos dias (tiles) --- */
+.dark .react-calendar__tile {
+  @apply text-stone-200 rounded-md hover:bg-gray-700 focus:bg-gray-700;
+}
+
+/* --- Dias de outros meses --- */
+.dark .react-calendar__month-view__days__day--neighboringMonth {
+  @apply text-gray-500;
+}
+
+/* --- Dia de hoje --- */
+.dark .react-calendar__tile--now {
+  @apply bg-gray-700/70 text-amber-300 font-bold;
+}
+.dark .react-calendar__tile--now:hover,
+.dark .react-calendar__tile--now:focus {
+  @apply bg-gray-600;
+}
+
+/* --- Dia/Range selecionado --- */
+.dark .react-calendar__tile--active {
+  @apply bg-amber-600 text-white font-bold;
+}
+.dark .react-calendar__tile--active:hover,
+.dark .react-calendar__tile--active:focus {
+  @apply bg-amber-500;
+}
+
+/* --- Estilo para o dia com anotações (a sua classe 'highlight-day') --- */
+.dark .highlight-day {
+  @apply bg-stone-700 rounded-full font-bold !important; 
+  /* Usamos !important aqui para garantir que ele sobrescreva outros estilos do tile */
+}

@@ -1,0 +1,65 @@
+{
+  "name": "FutureVision",
+  "type": "object",
+  "properties": {
+    "ideal_future_description": {
+      "type": "string",
+      "description": "Como imagino meu futuro ideal - parágrafo descritivo"
+    },
+    "life_purpose": {
+      "type": "string",
+      "description": "Propósito que me motiva e alimenta meu estado de espírito"
+    },
+    "person_i_want_to_be": {
+      "type": "string",
+      "description": "Tipo de pessoa que sou e passos para o mundo ver isso"
+    },
+    "most_important_to_achieve": {
+      "type": "string",
+      "description": "O mais importante de realizar, experienciar e me tornar"
+    },
+    "end_of_life_reflection": {
+      "type": "string",
+      "description": "No final da vida eu quero olhar para trás e saber que..."
+    },
+    "one_year_goals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "goal": {
+            "type": "string"
+          },
+          "steps": {
+            "type": "string"
+          },
+          "target_date": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "description": "Objetivos de 1 ano"
+    },
+    "three_year_goals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "goal": {
+            "type": "string"
+          },
+          "steps": {
+            "type": "string"
+          },
+          "target_date": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "description": "Objetivos de 3 anos"
+    }
+  },
+  "required": []
+}

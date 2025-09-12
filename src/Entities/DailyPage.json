@@ -1,0 +1,125 @@
+import React, { useState, useEffect, useCallback } from "react";
+import toast from 'react-hot-toast';
+import { DailyPage, User, WeeklyPlanning } from "@/Entities";
+import { Button } from "@/Components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
+import { Input } from "@/Components/ui/Input";
+import { Textarea } from "@/Components/ui/Textarea";
+import { Label } from "@/Components/ui/Label";
+import { Sun, Moon, Save, ChevronLeft, ChevronRight, ArrowRight, CheckCircle, Plus, Share, HelpCircle, Target, Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import Schedule from "@/Components/daily/Schedule";
+import { generateICS } from "@/utils";
+import CalendarTutorial from "@/Components/daily/CalendarTutorial";
+import FormField from "@/Components/ui/FormField";
+import SectionSaveButton from "@/Components/ui/SectionSaveButton"; // NOVO: Importamos o botão de salvar por seção
+
+const getWeekStart = (date: Date) => { /* ... (função continua a mesma) ... */ };
+
+export default function DailyPageComponent() {
+  const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0]);
+  const [dailyData, setDailyData] = useState<any>(null);
+  const [weeklyPlan, setWeeklyPlan] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasExistingData, setHasExistingData] = useState(false);
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+  useEffect(() => {
+    // ... (useEffect para carregar os dados continua o mesmo) ...
+  }, [currentDate]);
+
+  // NOVO: Função de salvar genérica para seções
+  const handleSaveSection = async (dataToSave: Partial<any>) => {
+    try {
+      const user = await User.me();
+      if (!user) {
+        toast.error("Sessão expirada.");
+        return;
+      }
+      
+      let entryToUpdate = dailyData;
+      if (!hasExistingData) {
+        // Se a página ainda não foi criada, cria primeiro
+        const created = await DailyPage.create({ date: currentDate, created_by: user.email, ...dataToSave });
+        setDailyData(created);
+        setHasExistingData(true);
+        entryToUpdate = created;
+      } else {
+        // Se já existe, apenas atualiza
+        await DailyPage.update(dailyData.id, dataToSave);
+      }
+      
+      // Atualiza o estado local para refletir a mudança
+      setDailyData((prev: any) => ({ ...prev, ...dataToSave }));
+
+    } catch (error) {
+      console.error("Erro ao salvar seção:", error);
+      throw error; // Lança o erro para o componente do botão tratar
+    }
+  };
+  
+  // ... (outras funções auxiliares continuam as mesmas) ...
+
+  if (isLoading || !dailyData) {
+    return <div className="flex justify-center items-center h-[80vh]"><Loader2 className="w-8 h-8 animate-spin text-stone-500" /></div>;
+  }
+  
+  return (
+    <>
+      <div className="max-w-4xl mx-auto p-6 space-y-8">
+        {/* Header e Rituais (sem alteração) */}
+        {/* ... */}
+        
+        {/* Card "Foco da Semana" (sem alteração) */}
+        {/* ... */}
+        
+        {/* --- MUDANÇAS ABAIXO --- */}
+
+        <Card className="bg-white border-stone-200">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Mensagem para seu dia</CardTitle>
+            {/* NOVO: Botão de salvar para esta seção */}
+            <SectionSaveButton onSave={() => handleSaveSection({ day_message: dailyData.day_message })} />
+          </CardHeader>
+          <CardContent>
+            <Textarea
+              value={dailyData.day_message || ''}
+              onChange={(e) => setDailyData({ ...dailyData, day_message: e.target.value })}
+              placeholder="Qual mensagem você quer carregar consigo hoje?"
+              className="bg-stone-50/50 min-h-[80px]"
+            />
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white border-stone-200">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>3 Principais Objetivos/Prioridades</CardTitle>
+             {/* NOVO: Botão de salvar para esta seção */}
+            <SectionSaveButton onSave={() => handleSaveSection({ main_priorities: dailyData.main_priorities })} />
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {(dailyData.main_priorities || ['', '', '']).map((priority: string, index: number) => (
+              <FormField key={index} label={`Prioridade ${index + 1}`} htmlFor={`prio-${index}`}>
+                  <Input
+                    id={`prio-${index}`}
+                    value={priority}
+                    onChange={(e) => {
+                        const updated = [...(dailyData.main_priorities || ['', '', ''])];
+                        updated[index] = e.target.value;
+                        setDailyData({ ...dailyData, main_priorities: updated });
+                    }}
+                  />
+              </FormField>
+            ))}
+          </CardContent>
+        </Card>
+        
+        {/* O restante dos cards (Agenda, Tarefas, etc.) seguiria o mesmo padrão... */}
+        
+        {/* REMOVIDO: O botão de salvar global no final da página foi removido. */}
+      </div>
+      <CalendarTutorial open={isTutorialOpen} onOpenChange={setIsTutorialOpen} />
+    </>
+  );
+}

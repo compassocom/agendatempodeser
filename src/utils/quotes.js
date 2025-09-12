@@ -1,0 +1,66 @@
+// Array de citações inspiradoras que muda a cada dia
+const inspirationalQuotes = [
+  "O tempo que dedicamos a nós mesmos nunca é tempo perdido.",
+  "Cada manhã é uma oportunidade de reescrever nossa história.",
+  "A consciência é o primeiro passo para a transformação.",
+  "Pequenos passos diários levam a grandes mudanças.",
+  "Você é o autor da sua própria jornada.",
+  "A pausa consciente é onde nasce a sabedoria.",
+  "Crescer é permitir-se ser vulnerável e autêntico.",
+  "O presente é o único momento em que a mudança é possível.",
+  "Sua jornada interior é o tesouro mais valioso que você possui.",
+  "Cada reflexão é uma semente plantada para o futuro.",
+  "A gentileza consigo mesmo abre portas que a crítica fecha.",
+  "Você já tem tudo o que precisa para começar de novo, agora.",
+  "O autoconhecimento é a bússola que nos guia através da vida.",
+  "Cada dia é uma página em branco esperando sua história.",
+  "A coragem não é ausência de medo, é agir apesar dele.",
+  "Sua paz interior é seu maior poder.",
+  "O que você faz hoje ecoa na eternidade.",
+  "A mudança começa no momento em que decidimos parar de fugir de nós mesmos.",
+  "Você é muito mais forte do que imagina e muito mais sábio do que pensa.",
+  "A vida não é sobre encontrar a si mesmo, é sobre criar a si mesmo.",
+  "Cada respiração consciente é um ato de amor próprio.",
+  "Seu tempo é limitado, não o desperdice vivendo a vida de outra pessoa.",
+  "A felicidade não é um destino, é um modo de viajar.",
+  "Você não precisa ser perfeito, você precisa ser real.",
+  "O silêncio é onde encontramos as respostas que procuramos.",
+  "Cada escolha consciente é um passo em direção à liberdade.",
+  "Você tem o poder de criar a vida que deseja viver.",
+  "A gratidão transforma o que temos em suficiente.",
+  "Sua única competição é quem você foi ontem.",
+  "A vida é muito preciosa para ser vivida no piloto automático.",
+  "O amor próprio não é egoísmo, é sabedoria.",
+  "Cada dia oferece 86.400 segundos de possibilidades.",
+  "Você é o jardim e o jardineiro da sua própria vida.",
+  "A mudança que você busca no mundo começa dentro de você.",
+  "Sua autenticidade é seu superpoder.",
+  "O tempo investido em autodescoberta nunca é desperdiçado.",
+  "Você não está atrasado na vida, você está exatamente onde precisa estar.",
+  "A paciência contigo mesmo é uma forma de compaixão.",
+  "Cada momento é uma nova chance de escolher quem você quer ser.",
+  "A vida é uma série de começos naturais e espontâneos.",
+  "Sua jornada é única, não tente copiá-la de ninguém.",
+  "O que você pensa, você se torna. O que você sente, você atrai.",
+  "A verdadeira riqueza é ter tempo para o que realmente importa.",
+  "Você não precisa ter tudo resolvido, você só precisa começar.",
+  "A vida acontece agora, não ontem nem amanhã.",
+  "Cada desafio é uma oportunidade disfarçada de crescimento.",
+  "Você é a pessoa mais importante da sua vida.",
+  "A simplicidade é a sofisticação máxima.",
+  "Sua energia é sagrada, invista-a conscientemente.",
+  "O autoconhecimento é a chave que abre todas as portas.",
+  "Você tem dentro de si tudo o que precisa para florescer.",
+  "A vida é muito curta para viver os sonhos de outra pessoa.",
+  "Cada dia é um presente, por isso é chamado de presente.",
+  "A revolução mais poderosa começa dentro de você.",
+  "Você não está quebrado, você está em construção."
+];
+
+export function getTodayQuote() {
+  // Usar a data para gerar sempre a mesma citação para o mesmo dia
+  const today = new Date();
+  const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+  const quoteIndex = dayOfYear % inspirationalQuotes.length;
+  return inspirationalQuotes[quoteIndex];
+}

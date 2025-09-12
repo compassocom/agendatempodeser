@@ -1,0 +1,39 @@
+/* Em src/print.css */
+
+@media print {
+  /* --- REGRAS GLOBAIS DE IMPRESSÃO --- */
+
+  /* Esconde tudo que não deve ser impresso */
+  .print-hidden, header, footer, nav, button {
+    display: none !important;
+  }
+  
+  /* Esconde o container de notificações (toast) da biblioteca react-hot-toast */
+  .Toastify, [data-reach-alert], .go3958317564, .go4109123758 {
+    display: none !important;
+  }
+
+  /* Garante que o corpo da impressão tenha fundo branco e use uma fonte serifada */
+  body {
+    font-family: 'Times New Roman', serif;
+    background-color: #ffffff;
+  }
+
+  /* Garante que o texto tenha uma aparência consistente */
+  p, li, span, h3, h2, h1 {
+    font-size: 12pt;
+    color: #333;
+  }
+
+  /* --- CONTROLE DE PÁGINA --- */
+
+  /* Força uma quebra de página DEPOIS de cada componente principal */
+  .page-break {
+    page-break-after: always;
+  }
+
+  /* Tenta evitar que o conteúdo de uma seção quebre no meio da página */
+  .printable-section {
+    page-break-inside: avoid;
+  }
+}
