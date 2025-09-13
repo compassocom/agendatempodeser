@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
 import toast from 'react-hot-toast';
 import { DailyPage, User, WeeklyPlanning } from "@/Entities";
-import { Button } from "@/Components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
-import { Input } from "@/Components/ui/Input";
-import { Textarea } from "@/Components/ui/Textarea";
-import { Label } from "@/Components/ui/Label";
+import { Button } from "@/components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
+import { Label } from "@/components/ui/Label";
 import { Sun, Moon, Save, ChevronLeft, ChevronRight, ArrowRight, CheckCircle, Plus, Share, HelpCircle, Target, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import Schedule from "@/Components/daily/Schedule";
+import Schedule from "@/components/daily/Schedule";
 import { generateICS } from "@/utils";
-import CalendarTutorial from "@/Components/daily/CalendarTutorial";
-import FormField from "@/Components/ui/FormField";
-import SectionSaveButton from "@/Components/ui/SectionSaveButton"; // NOVO: Importamos o botão de salvar por seção
+import CalendarTutorial from "@/components/daily/CalendarTutorial";
+import FormField from "@/components/ui/FormField";
+import SectionSaveButton from "@/components/ui/SectionSaveButton"; // NOVO: Importamos o botão de salvar por seção
 
 const getWeekStart = (date: Date) => { /* ... (função continua a mesma) ... */ };
 

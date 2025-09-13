@@ -1,5 +1,5 @@
 import React from 'react';
-import { User } from '../entities';
+import { User } from '@/entities';
 import { Button } from '../components/ui/button';
 import { ShieldAlert } from 'lucide-react';
 

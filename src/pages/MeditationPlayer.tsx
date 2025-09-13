@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Meditation } from '@/entities';
-import { Button } from '@/Components/ui/Button';
-import { Card, CardContent } from '@/Components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Loader2, Play, Pause, RefreshCw, Volume2, VolumeX } from 'lucide-react';
 
 export default function MeditationPlayerPage() {

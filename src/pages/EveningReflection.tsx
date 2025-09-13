@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect } from "react";
 import { DailyPage, User } from "@/Entities";
-import { Button } from "@/Components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/Components/ui/Textarea";
-import { Label } from "@/Components/ui/Label";
+import { Textarea } from "@/components/ui/Textarea";
+import { Label } from "@/components/ui/Label";
 import { Moon, Save, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";

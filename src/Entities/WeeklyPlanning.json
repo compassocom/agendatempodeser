@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import toast from 'react-hot-toast';
 import { WeeklyPlanning, User, MonthlyVision, DailyPage } from "@/Entities"; // NOVO: DailyPage
 import { InvokeLLM } from "@/integrations/Core"; // NOVO: A "IA"
-import { Button } from "@/Components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
-import { Textarea } from "@/Components/ui/Textarea";
-import { Input } from "@/Components/ui/Input";
+import { Button } from "@/components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Textarea } from "@/components/ui/Textarea";
+import { Input } from "@/components/ui/Input";
 import { Save, ChevronLeft, ChevronRight, Pin, Loader2, Sparkles } from "lucide-react"; // NOVO: Sparkles
-import FormField from "@/Components/ui/FormField";
+import FormField from "@/components/ui/FormField";
 
 export default function WeeklyPlanningPage() {
   const [weekStartDate, setWeekStartDate] = useState(() => {

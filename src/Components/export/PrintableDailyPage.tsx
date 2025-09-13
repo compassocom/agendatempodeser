@@ -67,7 +67,7 @@ const formatWeekTitle = (weekDate) => {
 };
 
 
-// --- Reusable UI Components ---
+// --- Reusable UI components ---
 const Section = ({ title, children, className = '' }) => (
   <div className={`bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md print:shadow-none print:border print:border-gray-200 ${className}`}>
     <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 border-b-2 border-gray-200 dark:border-gray-700 pb-2 mb-4">{title}</h3>
@@ -87,7 +87,7 @@ const PrintableContainer = ({ id, title, children }) => (
 );
 
 
-// --- Printable Components Alinhados com a Base de Dados ---
+// --- Printable components Alinhados com a Base de Dados ---
 
 const PrintableMonthlyVision = ({ data }) => (
   <PrintableContainer id="monthly-vision" title={`VISÃO MACRO MENSAL - ${formatMonthTitle(data.month)}`}>

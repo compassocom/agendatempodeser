@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { DailyPage, User } from "@/Entities";
-import { Button } from "@/Components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/Components/ui/Textarea";
-import { Label } from "@/Components/ui/Label";
+import { Textarea } from "@/components/ui/Textarea";
+import { Label } from "@/components/ui/Label";
 import { Sun, Save, ArrowLeft, Loader2 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { createPageUrl } from "@/utils";
