@@ -1,5 +1,5 @@
 import React from 'react';
-import { supabase } from '../supabaseClient';
+import { supabase } from '../supabaseClient.ts';
 import { Button } from '../components/ui/button';
 import { Chrome } from 'lucide-react';
 

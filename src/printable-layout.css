@@ -1,0 +1,142 @@
+/* Estilo para o Modal de Pré-visualização */
+.print-preview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}
+
+.print-preview-toolbar {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 15px;
+  z-index: 1001;
+}
+
+.print-preview-toolbar button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.print-preview-content {
+  margin-top: 100px; /* Espaço para o toolbar */
+  margin-bottom: 50px;
+}
+
+/* A MÁGICA ACONTECE AQUI: A FOLHA A4 */
+.printable-a4 {
+  width: 210mm;
+  height: 297mm;
+  background-color: white;
+  margin-bottom: 20px; /* Espaço entre as páginas no preview */
+  padding: 15mm;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+  color: #333;
+  font-family: 'Helvetica', 'Arial', sans-serif; /* Uma fonte base */
+}
+
+/* REGRAS ESPECÍFICAS PARA QUANDO A IMPRESSÃO É ACIONADA */
+@media print {
+  /* Esconde tudo que não for a área de impressão */
+  body > *:not(.printable-area-wrapper) {
+    display: none;
+  }
+  
+  /* Garante que a área de impressão ocupe tudo */
+  .printable-area-wrapper {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  /* Remove estilos de preview da folha A4 */
+  .printable-a4 {
+    margin: 0;
+    box-shadow: none;
+    height: 100%; /* Ajusta a altura para a página de impressão */
+  }
+
+  /* Garante que cada .printable-a4 comece em uma nova página */
+  .printable-a4 {
+    page-break-after: always;
+  }
+}
+
+/* Estilos para a página "Semana a Frente" */
+.weekly-view .main-title {
+  text-align: center;
+  font-size: 24pt;
+  font-weight: bold;
+  margin-bottom: 20mm;
+}
+
+.weekly-view .content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* Coluna da esquerda é 2x maior que a da direita */
+  gap: 15mm;
+  margin-bottom: 15mm;
+}
+
+.weekly-view .main-questions .question-block {
+  font-style: italic;
+  margin-bottom: 15mm;
+}
+
+.weekly-view .side-panel h3 {
+  font-size: 10pt;
+  font-weight: bold;
+  margin-bottom: 5mm;
+}
+
+.weekly-view .placeholder-box {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.weekly-view .placeholder-box.tall {
+  height: 60mm;
+}
+
+.weekly-view .schedule-prompt {
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 5mm;
+}
+
+.weekly-view .days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7 colunas de tamanho igual */
+  gap: 5mm;
+}
+
+.weekly-view .day-column h4 {
+  font-size: 10pt;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 3mm;
+}
+
+.weekly-view .day-column .placeholder-box {
+  height: 80mm; /* Altura para os eventos da semana */
+}
+

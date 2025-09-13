@@ -15,7 +15,7 @@ import ProfilePage from '@/pages/Profile';
 import IntroductionPage from '@/pages/Introduction';
 import MeditationsPage from '@/pages/Meditations';
 import MeditationPlayerPage from '@/pages/MeditationPlayer';
-import OnboardingPage from '@/Pages/OnboardingPage';
+import OnboardingPage from '@/pages/OnboardingPage';
 
 // Componente auxiliar para envolver as páginas com o Layout
 const LayoutWrapper = ({ children }: { children: React.ReactElement }) => {
