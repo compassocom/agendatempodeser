@@ -4,7 +4,7 @@
 // 3. Centraliza o tratamento de estado (loading, saving) e erros.
 
 import { useState, useEffect, useCallback } from 'react';
-import { DailyPage, User } from "@/entities";
+import { DailyPage, User } from "@/Entities";
 import toast from 'react-hot-toast';
 
 export function useDailyEntry(date) {
