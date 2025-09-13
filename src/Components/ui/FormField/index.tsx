@@ -1,5 +1,5 @@
 import React from 'react';
-import { Label } from '@/components/ui/Label';
+import { Label } from '@/Components/ui/Label';
 
 type FormFieldProps = {
   label: string;

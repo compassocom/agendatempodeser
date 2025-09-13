@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/Card';
+import { Button } from '@/Components/ui/Button';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { BookOpen, Calendar, Target, Sun, Lightbulb, Printer, Share, HelpCircle, ArrowLeft, ShoppingCart } from 'lucide-react';

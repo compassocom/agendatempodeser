@@ -3,12 +3,12 @@ import toast from 'react-hot-toast';
 import { Save, Plus, Trash2, Target, Loader2, Lightbulb } from "lucide-react";
 
 // --- CORREÇÃO: Importações reais das entidades e componentes ---
-import { User, FutureVision } from "@/entities";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { User, FutureVision } from "@/Entities";
+import { Button } from "@/Components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import { Input } from "@/Components/ui/input";
+import { Textarea } from "@/Components/ui/textarea";
+import { Label } from "@/Components/ui/label";
 
 // Tipos
 type Goal = { goal: string; steps: string; target_date: string; };

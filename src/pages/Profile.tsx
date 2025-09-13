@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import toast from 'react-hot-toast';
-import { User, DailyPage, MonthlyVision, WeeklyPlanning } from "../entities";
-import { Button } from "../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Input } from "../components/ui/input";
-import { Textarea } from "../components/ui/textarea";
+import { User, DailyPage, MonthlyVision, WeeklyPlanning } from "@/entities";
+import { Button } from "@/Components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import { Input } from "@/Components/ui/input";
+import { Textarea } from "@/Components/ui/textarea";
 import { Save, LogOut, Award, Loader2, Flame } from "lucide-react";
-import FormField from "../components/ui/FormField";
+import FormField from "@/Components/ui/FormField";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { calculateStreak } from "../utils/stats";

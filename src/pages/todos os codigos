@@ -2,8 +2,8 @@ na pasta Pages:
 
 AccessDeniedPage
 import React from 'react';
-import { User } from '@/entities';
-import { Button } from '../components/ui/button';
+import { User } from '@/Entities';
+import { Button } from '@/Components/ui/button';
 import { ShieldAlert } from 'lucide-react';
 
 export default function AccessDeniedPage() {
@@ -36,7 +36,7 @@ import toast from 'react-hot-toast';
 import { Sun, Moon, ChevronLeft, ChevronRight, ArrowRight, CheckCircle, Plus, Target, Loader2, Save } from "lucide-react";
 import { Link } from "react-router-dom";
 // --- IMPORTAÇÃO REAL DO SUPABASE ---
-import { DailyPage, WeeklyPlanning, User } from "../entities/index";
+import { DailyPage, WeeklyPlanning, User } from "@/Entities/index";
 
 // --- INÍCIO DOS COMPONENTES DE UI (MANTIDOS LOCALMENTE PARA ESTABILIDADE VISUAL) ---
 const Button = ({ children, className = '', variant, size, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: string, size?: string }) => ( <button className={`inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-600 disabled:opacity-50 ${variant === 'outline' ? 'border border-stone-300 bg-transparent hover:bg-stone-100 hover:text-stone-800 dark:border-gray-600 dark:text-stone-300 dark:hover:bg-gray-700 dark:hover:text-stone-200' : 'bg-stone-800 text-white hover:bg-stone-900 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200'} ${size === 'icon' ? 'h-10 w-10' : 'h-10 px-4 py-2'} ${size === 'lg' ? 'h-11 px-6 text-base' : ''} ${className}`} {...props}>{children}</button> );
@@ -118,11 +118,11 @@ import { toast } from 'react-hot-toast';
 import { Calendar, Target, Sun, Lightbulb, ArrowRight, Quote, Loader2, Flame } from "lucide-react";
 
 // --- IMPORTAÇÕES REAIS ---
-import { User, DailyPage } from "@/entities/index";
+import { User, DailyPage } from "@/Entities/index";
 import { createPageUrl } from "@/utils";
 import { getTodayQuote } from "@/utils/quotes";
 import { calculateStreak } from "@/utils/stats";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/Components/ui/card";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -248,7 +248,7 @@ EveningReflection
 import React, { useState, useEffect } from "react";
 import { DailyPage, User } from "@/Entities";
 import { Button } from "@/Components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Textarea } from "@/Components/ui/Textarea";
 import { Label } from "@/Components/ui/Label";
 import { Moon, Save, ArrowLeft } from "lucide-react";
@@ -411,7 +411,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/Card';
 import { Input } from '@/Components/ui/Input';
 import { Label } from '@/Components/ui/Label';
 import { Printer, Calendar as CalendarIcon, Loader2, FileText } from 'lucide-react';
-import { DailyPage, WeeklyPlanning, MonthlyVision, User, FutureVision } from '@/entities/index'; // Adicionado FutureVision
+import { DailyPage, WeeklyPlanning, MonthlyVision, User, FutureVision } from '@/Entities/index'; // Adicionado FutureVision
 import PrintableDailyPage from '@/Components/export/PrintableDailyPage';
 import PrintableWeeklyPlanning from '@/Components/export/PrintableWeeklyPlanning';
 import PrintableMonthlyVision from '@/Components/export/PrintableMonthlyVision';
@@ -944,7 +944,7 @@ export default function IntroductionPage() {
 LoginPage
 import React from 'react';
 import { supabase } from '../../supabaseClient';
-import { Button } from '../components/ui/button';
+import { Button } from '@/Components/ui/button';
 import { Chrome } from 'lucide-react';
 
 export default function LoginPage() {
@@ -993,7 +993,7 @@ export default function LoginPage() {
 MeditationPlayer
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Meditation } from '@/entities';
+import { Meditation } from '@/Entities';
 import { Button } from '@/Components/ui/Button';
 import { Card, CardContent } from '@/Components/ui/Card';
 import { Loader2, Play, Pause, RefreshCw, Volume2, VolumeX } from 'lucide-react';
@@ -1136,13 +1136,13 @@ import toast from 'react-hot-toast';
 import { Plus, Trash2, Save, Loader2, Calendar } from "lucide-react";
 
 // --- IMPORTAÇÕES REAIS (COM CAMINHOS CORRIGIDOS) ---
-import { User, MonthlyVision } from "../entities/index";
-import { Button } from "../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Input } from "../components/ui/input";
-import { Textarea } from "../components/ui/textarea";
-import { Label } from "../components/ui/label";
-import FormField from "../components/ui/formfield";
+import { User, MonthlyVision } from "@/Entities/index";
+import { Button } from "@/Components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import { Input } from "@/Components/ui/input";
+import { Textarea } from "@/Components/ui/textarea";
+import { Label } from "@/Components/ui/label";
+import FormField from "@/Components/ui/formfield";
 
 // Tipos para os dados
 type Project = { title: string; description: string; first_steps: string; };
@@ -1316,7 +1316,7 @@ MorningRitual
 import React, { useState, useEffect } from "react";
 import { DailyPage, User } from "@/Entities";
 import { Button } from "@/Components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Textarea } from "@/Components/ui/Textarea";
 import { Label } from "@/Components/ui/Label";
 import { Sun, Save, ArrowLeft, Loader2 } from "lucide-react";
@@ -1472,13 +1472,13 @@ Profile
 
 import React, { useState, useEffect } from "react";
 import toast from 'react-hot-toast';
-import { User, DailyPage, MonthlyVision, WeeklyPlanning } from "../entities";
-import { Button } from "../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Input } from "../components/ui/input";
-import { Textarea } from "../components/ui/textarea";
+import { User, DailyPage, MonthlyVision, WeeklyPlanning } from "@/Entities";
+import { Button } from "@/Components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import { Input } from "@/Components/ui/input";
+import { Textarea } from "@/Components/ui/textarea";
 import { Save, LogOut, Award, Loader2, Flame } from "lucide-react";
-import FormField from "../components/ui/FormField";
+import FormField from "@/Components/ui/FormField";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { calculateStreak } from "../utils/stats";
