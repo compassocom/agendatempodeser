@@ -4,7 +4,7 @@ import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import { Clock, CalendarPlus } from "lucide-react";
 import { Button } from '@/Components/ui/button';
-import { generateGoogleCalendarLink } from '../../utils/calendar.js';
+import { generateGoogleCalendarLink } from '@/@/utils/calendar.js';
 
 export default function Schedule({ date, morningSchedule, afternoonSchedule, onMorningChange, onAfternoonChange }) {
   const morningSlots = ["6AM", "6:30", "7", "7:30", "8", "8:30", "9", "9:30", "10", "10:30", "11", "11:30", "12PM", "12:30"];

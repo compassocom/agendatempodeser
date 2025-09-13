@@ -9,7 +9,7 @@ import { Save, LogOut, Award, Loader2, Flame } from "lucide-react";
 import FormField from "@/Components/ui/FormField";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { calculateStreak } from "../utils/stats";
+import { calculateStreak } from "@/utils/stats";
 import { useNavigate } from "react-router-dom";
 
 export default function ProfilePage() {
