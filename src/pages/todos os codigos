@@ -411,7 +411,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/Card';
 import { Input } from '@/Components/ui/Input';
 import { Label } from '@/Components/ui/Label';
 import { Printer, Calendar as CalendarIcon, Loader2, FileText } from 'lucide-react';
-import { DailyPage, WeeklyPlanning, MonthlyVision, User, FutureVision } from '@/Entities/index'; // Adicionado FutureVision
+import { DailyPage, WeeklyPlanning, MonthlyVision, User, FutureVision } from '@/entities/index'; // Adicionado FutureVision
 import PrintableDailyPage from '@/Components/export/PrintableDailyPage';
 import PrintableWeeklyPlanning from '@/Components/export/PrintableWeeklyPlanning';
 import PrintableMonthlyVision from '@/Components/export/PrintableMonthlyVision';
@@ -993,7 +993,7 @@ export default function LoginPage() {
 MeditationPlayer
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Meditation } from '@/Entities';
+import { Meditation } from '@/entities';
 import { Button } from '@/Components/ui/Button';
 import { Card, CardContent } from '@/Components/ui/Card';
 import { Loader2, Play, Pause, RefreshCw, Volume2, VolumeX } from 'lucide-react';
