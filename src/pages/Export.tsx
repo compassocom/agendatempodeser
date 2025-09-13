@@ -138,59 +138,37 @@ const PrintableWeeklyPlanning = ({ data }) => (
 );
 
 const PrintableDailyPage = ({ data }) => {
-    const timeSlots = ["6AM", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "1PM", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30"];
+    const timeSlots = ["6AM", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12PM", "12:30", "1PM", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30"];
     
     const morningQuestions = [
-        { key: 'daily_energy', text: "1- Qual é a energia que permeia meu dia hoje? Que mensagem ela traz para minha jornada?"},
-        { key: 'thought_patterns', text: "2- Quais padrões de pensamento ou comportamento podem me desviar do meu caminho hoje?"},
-        { key: 'conscious_choices', text: "3- Que escolhas conscientes posso fazer hoje para nutrir meu bem-estar e alinhar minhas ações?"},
-        { key: 'express_love', text: "4- Como posso expressar amor, gratidão ou apreço a quem é importante para mim hoje?"},
-        { key: 'expand_horizons', text: "5- Qual pequeno passo posso dar hoje para expandir meus horizontes e abraçar o desconhecido?"},
-        { key: 'planting_seeds', text: "6- Quais sementes estou plantando hoje que florescerão no futuro? Como posso nutri-las com paciência e dedicação?"},
-        { key: 'internal_criteria', text: "7- Quais são os critérios internos que guiarão minhas ações hoje? Como posso honrar minha integridade e me orgulhar?"}
+        { key: 'daily_energy', text: 'Qual é a energia que permeia meu dia hoje?' },
+        { key: 'limiting_patterns', text: 'Quais padrões podem me desviar do meu caminho?' },
+        { key: 'conscious_choices', text: 'Que escolhas conscientes posso fazer hoje?' },
+        { key: 'express_gratitude', text: 'Como posso expressar amor, gratidão ou apreço?' },
+        { key: 'expand_horizons', text: 'Qual pequeno passo posso dar hoje?' },
+        { key: 'plant_seeds', text: 'Quais sementes estou plantando hoje?' },
+        { key: 'internal_criteria', text: 'Quais são os critérios internos que guiarão minhas ações?' }
     ];
 
     const eveningQuestions = [
-        { key: 'blessings', text: "8- Quais bênçãos, grandes e pequenas, permearam meu dia hoje?"},
-        { key: 'biggest_challenge', text: "9- Qual foi a maior provação que enfrentei hoje? Que forças descobri em mim mesmo ao superá-la?"},
-        { key: 'emerging_wisdom', text: "10- Qual foi a sabedoria que emergiu das experiências de hoje?"},
-        { key: 'misalignment_moments', text: "11- Quais foram os momentos de desalinho ou frustração hoje? Que lições posso extrair deles com compaixão por mim mesmo?"},
-        { key: 'better_choices', text: "12- Quais escolhas ou ações poderiam ter nutrido mais meu bem-estar e propósito hoje?"},
-        { key: 'sustaining_habits', text: "13- Quais hábitos me sustentaram hoje? Como posso celebrá-los e buscar formas de aprimoramento?"}
+        { key: 'daily_blessings', text: 'Quais bênçãos permearam meu dia?' },
+        { key: 'major_challenge', text: 'Qual foi a maior provação que enfrentei?' },
+        { key: 'wisdom_gained', text: 'Qual foi a sabedoria que emergiu?' },
+        { key: 'moments_of_misalignment', text: 'Quais foram os momentos de desalinho?' },
+        { key: 'better_choices', text: 'Quais escolhas poderiam ter nutrido mais?' },
+        { key: 'sustaining_habits', text: 'Quais hábitos me sustentaram hoje?' }
     ];
 
     const agenda = {};
-    const convertTo12HourKey = (time24) => {
-        if (!time24 || typeof time24 !== 'string') return null;
-        const [hourStr, minute] = time24.split(':');
-        let hour = parseInt(hourStr, 10);
-        
-        const ampm = hour >= 12 ? 'PM' : 'AM';
-        
-        hour = hour % 12;
-        hour = hour ? hour : 12;
-
-        if (minute === '00') return `${hour}${ampm}`;
-        if (minute === '30') return `${hour}:${minute}`;
-
-        const timeWithoutSuffix = `${hour}${minute === '00' ? '' : `:${minute}`}`;
-        const slot = timeSlots.find(s => s.startsWith(timeWithoutSuffix) && s.endsWith(ampm));
-        return slot || null;
-    };
-
-    const parseSchedule = (scheduleObject) => {
-      if (typeof scheduleObject === 'object' && scheduleObject !== null) {
-        for (const time24 in scheduleObject) {
-          const task = scheduleObject[time24];
-          const timeKey = convertTo12HourKey(time24);
-          if (timeKey && task) {
-              agenda[timeKey] = task;
-          }
+    const parseSchedule = (scheduleObject, targetAgenda) => {
+        if (typeof scheduleObject !== 'object' || scheduleObject === null) return;
+        for (const timeKey in scheduleObject) {
+            const task = scheduleObject[timeKey];
+            targetAgenda[timeKey] = task;
         }
-      }
     };
-    parseSchedule(data.morning_schedule);
-    parseSchedule(data.afternoon_schedule);
+    parseSchedule(data.morning_schedule, agenda);
+    parseSchedule(data.afternoon_schedule, agenda);
 
     return (
     <PrintableContainer id="daily-page">
@@ -205,7 +183,7 @@ const PrintableDailyPage = ({ data }) => {
                     {morningQuestions.map((q, index) => (
                         <div key={index}>
                             <p className="font-semibold text-sm my-2">{q.text}</p>
-                            {getAnswerFromRitual(data.morning_ritual, q.key)}
+                            {displayData(data.morning_ritual?.[q.key])}
                         </div>
                     ))}
                 </Section>
@@ -217,7 +195,7 @@ const PrintableDailyPage = ({ data }) => {
                         {timeSlots.map((time, index) => (
                             <div key={`${time}-${index}`} className="flex items-center border-b dark:border-gray-700 pb-1">
                                 <span className="w-16 text-sm font-semibold">{time}</span>
-                                <span className="flex-1 text-sm">{displayData(agenda[time])}</span>
+                                <span className="flex-1 text-sm">{displayData(agenda[time.replace('PM','').replace('AM', '')])}</span>
                             </div>
                         ))}
                     </div>
@@ -231,7 +209,7 @@ const PrintableDailyPage = ({ data }) => {
                      {eveningQuestions.map((q, index) => (
                         <div key={index}>
                             <p className="font-semibold text-sm my-2">{q.text}</p>
-                            {getAnswerFromRitual(data.evening_reflection, q.key)}
+                            {displayData(data.evening_reflection?.[q.key])}
                         </div>
                     ))}
                 </Section>
@@ -248,19 +226,6 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-  const [theme, setTheme] = useState('light');
-
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
-  };
 
   const handleSearch = async () => {
     setLoading(true);
@@ -277,28 +242,36 @@ export default function App() {
         return;
       }
       
-      // Busca Direta em cada tabela
-      const { data: dailyPageData } = await supabase
+      const { data: dailyPageData, error: dailyError } = await supabase
         .from('daily_pages')
         .select('*')
         .eq('user_id', user.id)
         .eq('date', selectedDate)
         .single();
+      if(dailyError && dailyError.code !== 'PGRST116') throw dailyError;
 
-      const { data: weeklyPlanningData } = await supabase
+      const weekStartDate = new Date(selectedDate + 'T00:00:00');
+      const dayOfWeek = weekStartDate.getDay();
+      const diff = weekStartDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // adjust when day is sunday
+      weekStartDate.setDate(diff);
+      const weekStartString = weekStartDate.toISOString().split('T')[0];
+
+      const { data: weeklyPlanningData, error: weeklyError } = await supabase
         .from('weekly_plannings')
         .select('*')
         .eq('user_id', user.id)
-        .lte('week_start_date', selectedDate)
-        .gte('week_start_date', new Date(new Date(selectedDate).setDate(new Date(selectedDate).getDate() - 6)).toISOString().split('T')[0])
+        .eq('week_start_date', weekStartString)
         .single();
-        
-      const { data: monthlyVisionData } = await supabase
+      if(weeklyError && weeklyError.code !== 'PGRST116') throw weeklyError;
+
+      const monthString = selectedDate.substring(0, 7);
+      const { data: monthlyVisionData, error: monthlyError } = await supabase
         .from('monthly_visions')
         .select('*')
         .eq('user_id', user.id)
-        .eq('month', selectedDate.substring(0, 7))
+        .eq('month', monthString)
         .single();
+      if(monthlyError && monthlyError.code !== 'PGRST116') throw monthlyError;
 
       const combinedData = {
         dailyPage: dailyPageData,
@@ -363,6 +336,21 @@ export default function App() {
   return (
     <div className="bg-gray-50 dark:bg-gray-900 min-h-screen font-sans text-gray-800 dark:text-gray-200">
       <div className="no-print">
+        <div className="p-4">
+            <div className="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md mb-8 flex flex-col md:flex-row items-center gap-8">
+                <div className="w-32 h-40 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                </div>
+                <div className="text-center md:text-left">
+                    <h2 className="text-2xl font-bold">Leve sua jornada para o papel</h2>
+                    <p className="text-gray-600 dark:text-gray-400 mt-2">Aprofunde suas reflexões com a versão física da Agenda Tempo de Ser. Uma ferramenta poderosa para o autoconhecimento, longe das distrações digitais.</p>
+                    <button className="mt-4 bg-gray-800 dark:bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-900 dark:hover:bg-indigo-700 transition-colors">
+                        Quero a minha agenda física
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <header className="bg-white dark:bg-gray-800 shadow-sm p-6 relative">
           <div className="max-w-7xl mx-auto text-center">
               <h1 className="text-2xl font-bold">Exportar e Imprimir Agenda</h1>
@@ -390,28 +378,9 @@ export default function App() {
                 <PrintButton targetId="monthly-vision">Mensal</PrintButton>
               </div>
           </div>
-          <button onClick={toggleTheme} className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-              {theme === 'light' ? 
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg> : 
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-              }
-          </button>
         </header>
 
         <main className="p-4">
-          <div className="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md mb-8 flex flex-col md:flex-row items-center gap-8">
-              <div className="w-32 h-40 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-              </div>
-              <div className="text-center md:text-left">
-                  <h2 className="text-2xl font-bold">Leve sua jornada para o papel</h2>
-                  <p className="text-gray-600 dark:text-gray-400 mt-2">Aprofunde suas reflexões com a versão física da Agenda Tempo de Ser. Uma ferramenta poderosa para o autoconhecimento, longe das distrações digitais.</p>
-                  <button className="mt-4 bg-gray-800 dark:bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-900 dark:hover:bg-indigo-700 transition-colors">
-                      Quero a minha agenda física
-                  </button>
-              </div>
-          </div>
-
           {loading && (
             <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-500"></div><p className="ml-4">Carregando seus dados...</p></div>
           )}
