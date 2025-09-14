@@ -7,7 +7,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/Components/ui/dialog";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/Components/ui/Button";
 import { CalendarPlus, Download, ExternalLink } from "lucide-react";
 
 export default function CalendarTutorial({ open, onOpenChange }) {
