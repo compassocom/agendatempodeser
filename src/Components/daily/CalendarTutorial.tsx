@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/Components/ui/dialog";
+} from "@/Components/ui/Dialog";
 import { Button } from "@/Components/ui/Button";
 import { CalendarPlus, Download, ExternalLink } from "lucide-react";
 

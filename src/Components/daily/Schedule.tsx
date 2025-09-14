@@ -1,9 +1,9 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
+import { Input } from "@/Components/ui/Input";
+import { Label } from "@/Components/ui/Label";
 import { Clock, CalendarPlus } from "lucide-react";
-import { Button } from '@/Components/ui/button';
+import { Button } from '@/Components/ui/Button';
 import { generateGoogleCalendarLink } from '@/utils/calendar.js';
 
 export default function Schedule({ date, morningSchedule, afternoonSchedule, onMorningChange, onAfternoonChange }) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { supabase } from '@/supabaseClient.ts';
-import { Button } from '@/Components/ui/button';
+import { Button } from '@/Components/ui/Button';
 import { Chrome } from 'lucide-react';
 
 export default function LoginPage() {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DailyPage, User } from "@/Entities";
 import { Button } from "@/Components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Textarea } from "@/Components/ui/Textarea";
 import { Label } from "@/Components/ui/Label";
 import { Sun, Save, ArrowLeft, Loader2 } from "lucide-react";

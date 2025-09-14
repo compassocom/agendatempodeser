@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from '@/Entities';
-import { Button } from '@/Components/ui/button';
-import { Textarea } from '@/Components/ui/textarea';
+import { Button } from '@/Components/ui/Button';
+import { Textarea } from '@/Components/ui/Textarea';
 import { createPageUrl } from '@/utils';
 import toast from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
