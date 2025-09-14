@@ -2,7 +2,7 @@ import React, { useState, useEffect, ReactNode } from "react";
 import toast from 'react-hot-toast';
 import { Sun, Moon, ChevronLeft, ChevronRight, ArrowRight, CheckCircle, Plus, Target, Loader2, Save, CalendarPlus } from "lucide-react";
 import { Link } from "react-router-dom";
-import { DailyPage, WeeklyPlanning, User } from "@/Entities/index";
+import { DailyPage, WeeklyPlanning, User } from "@/Entities/Index";
 
 // --- COMPONENTES DE UI ---
 const Button = ({ children, className = '', variant, size, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: string, size?: string }) => ( <button className={`inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-600 disabled:opacity-50 ${variant === 'outline' ? 'border border-stone-300 bg-transparent hover:bg-stone-100 hover:text-stone-800 dark:border-gray-600 dark:text-stone-300 dark:hover:bg-gray-700 dark:hover:text-stone-200' : 'bg-stone-800 text-white hover:bg-stone-900 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200'} ${size === 'icon' ? 'h-10 w-10' : 'h-10 px-4 py-2'} ${size === 'lg' ? 'h-11 px-6 text-base' : ''} ${className}`} {...props}>{children}</button> );

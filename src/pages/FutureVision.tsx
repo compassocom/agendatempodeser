@@ -4,11 +4,11 @@ import { Save, Plus, Trash2, Target, Loader2, Lightbulb } from "lucide-react";
 
 // --- CORREÇÃO: Importações reais das entidades e componentes ---
 import { User, FutureVision } from "@/Entities";
-import { Button } from "@/Components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Input } from "@/Components/ui/input";
-import { Textarea } from "@/Components/ui/textarea";
-import { Label } from "@/Components/ui/label";
+import { Button } from "@/Components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
+import { Input } from "@/Components/ui/Input";
+import { Textarea } from "@/Components/ui/Textarea";
+import { Label } from "@/Components/ui/Label";
 
 // Tipos
 type Goal = { goal: string; steps: string; target_date: string; };
