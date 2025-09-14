@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Input } from "@/Components/ui/Input";
 import { Textarea } from "@/Components/ui/Textarea";
 import { Save, LogOut, Award, Loader2, Flame } from "lucide-react";
-import FormField from "@/Components/ui/FormField/Index";
+import FormField from "@/Components/ui/FormField/Index.tsx";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { calculateStreak } from "@/utils/stats";

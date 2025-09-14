@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Input } from "@/Components/ui/Input";
 import { Textarea } from "@/Components/ui/Textarea";
 import { Label } from "@/Components/ui/Label";
-import FormField from "@/Components/ui/FormField/Index";
+import FormField from "@/Components/ui/FormField/Index.tsx";
 
 // Tipos para os dados
 type Project = { title: string; description: string; first_steps: string; };
