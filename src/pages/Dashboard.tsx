@@ -4,11 +4,11 @@ import { toast } from 'react-hot-toast';
 import { Calendar, Target, Sun, Lightbulb, ArrowRight, Quote, Loader2, Flame } from "lucide-react";
 
 // --- IMPORTAÇÕES REAIS ---
-import { User, DailyPage } from "@/Entities/index";
+import { User, DailyPage } from "@/Entities/Index";
 import { createPageUrl } from "@/utils";
 import { getTodayQuote } from "@/utils/quotes";
 import { calculateStreak } from "@/utils/stats";
-import { Card, CardContent } from "@/Components/ui/card";
+import { Card, CardContent } from "@/Components/ui/Card";
 
 export default function Dashboard() {
   const navigate = useNavigate();
