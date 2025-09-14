@@ -3,13 +3,13 @@ import toast from 'react-hot-toast';
 import { Plus, Trash2, Save, Loader2, Calendar } from "lucide-react";
 
 // --- IMPORTAÇÕES REAIS (COM CAMINHOS CORRIGIDOS) ---
-import { User, MonthlyVision } from "@/Entities/index";
-import { Button } from "@/Components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Input } from "@/Components/ui/input";
-import { Textarea } from "@/Components/ui/textarea";
-import { Label } from "@/Components/ui/label";
-import FormField from "@/Components/ui/formfield";
+import { User, MonthlyVision } from "@/Entities/Index";
+import { Button } from "@/Components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
+import { Input } from "@/Components/ui/Input";
+import { Textarea } from "@/Components/ui/Textarea";
+import { Label } from "@/Components/ui/Label";
+import FormField from "@/Components/ui/FormField/Index";
 
 // Tipos para os dados
 type Project = { title: string; description: string; first_steps: string; };
