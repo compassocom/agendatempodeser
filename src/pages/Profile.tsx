@@ -12,6 +12,7 @@ import 'react-calendar/dist/Calendar.css';
 import { calculateStreak } from "@/utils/stats";
 import { useNavigate } from "react-router-dom";
 
+
 export default function ProfilePage() {
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState<any>(null);
