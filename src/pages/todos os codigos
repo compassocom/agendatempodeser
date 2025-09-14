@@ -943,7 +943,7 @@ export default function IntroductionPage() {
 
 LoginPage
 import React from 'react';
-import { supabase } from '../../supabaseClient';
+import { supabase } from '@/@/supabaseClient';
 import { Button } from '@/Components/ui/button';
 import { Chrome } from 'lucide-react';
 
@@ -1481,7 +1481,7 @@ import { Save, LogOut, Award, Loader2, Flame } from "lucide-react";
 import FormField from "@/Components/ui/FormField";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { calculateStreak } from "../utils/stats";
+import { calculateStreak } from "@/utils/stats";
 import { useNavigate } from "react-router-dom";
 
 export default function ProfilePage() {
