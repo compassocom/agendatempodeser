@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Meditation } from '@/Entities/Index';
+import { Meditation } from '@/Entities/Index/Index';
 import { Button } from '@/Components/ui/Button';
 import { Card, CardContent } from '@/Components/ui/Card';
 import { Loader2, Play, Pause, RefreshCw, Volume2, VolumeX } from 'lucide-react';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User } from '@/Entities';
+import { User } from '@/Entities/Index';
 import { Button } from '@/Components/ui/Button';
 import { Textarea } from '@/Components/ui/Textarea';
 import { createPageUrl } from '@/utils';

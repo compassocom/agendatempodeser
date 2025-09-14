@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { DailyPage, User } from "@/Entities";
+import { DailyPage, User } from "@/Entities/Index";
 import { Button } from "@/Components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Textarea } from "@/Components/ui/Textarea";
