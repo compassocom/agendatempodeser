@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { Save, Plus, Trash2, Target, Loader2, Lightbulb } from "lucide-react";
 
 // --- CORREÇÃO: Importações reais das entidades e componentes ---
-import { User, FutureVision } from "@/Entities";
+import { User, FutureVision } from "@/Entities/Index.ts";
 import { Button } from "@/Components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Input } from "@/Components/ui/Input";
