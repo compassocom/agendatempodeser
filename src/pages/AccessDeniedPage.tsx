@@ -1,6 +1,6 @@
 import React from 'react';
 import { User } from '@/Entities';
-import { Button } from '@/Components/ui/button';
+import { Button } from '@/Components/ui/Button';
 import { ShieldAlert } from 'lucide-react';
 
 export default function AccessDeniedPage() {
