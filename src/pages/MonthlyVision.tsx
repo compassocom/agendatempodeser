@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { Plus, Trash2, Save, Loader2, Calendar } from "lucide-react";
 
 // --- IMPORTAÇÕES REAIS (COM CAMINHOS CORRIGIDOS) ---
-import { User, MonthlyVision } from "@/Entities/Index";
+import { User, MonthlyVision } from "@//Entities/Index.ts";
 import { Button } from "@/Components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Input } from "@/Components/ui/Input";

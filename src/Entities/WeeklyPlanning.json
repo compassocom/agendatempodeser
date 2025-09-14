@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import toast from 'react-hot-toast';
-import { WeeklyPlanning, User, MonthlyVision, DailyPage } from "@/Entities"; // NOVO: DailyPage
+import { WeeklyPlanning, User, MonthlyVision, DailyPage } from "@/Entities/Index"; // NOVO: DailyPage
 import { InvokeLLM } from "@/integrations/Core"; // NOVO: A "IA"
 import { Button } from "@/Components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import toast from 'react-hot-toast';
-import { WeeklyPlanning, User, MonthlyVision } from "@/Entities";
+import { WeeklyPlanning, User, MonthlyVision } from "@/Entities/Index";
 import { Button } from "@/Components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Textarea } from "@/Components/ui/Textarea";
