@@ -7,6 +7,10 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
+      options: {
+        // Isso garante que ele volte para a página onde o usuário estava
+        redirectTo: window.location.origin,
+      },
     });
   };
 
