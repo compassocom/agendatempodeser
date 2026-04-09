@@ -1,34 +1,25 @@
 import React from 'react';
-import { supabase } from '@/supabaseClient.ts';
+import { supabase } from '@/supabaseClient';
 import { Button } from '@/Components/ui/Button';
 import { Chrome } from 'lucide-react';
 
 export default function LoginPage() {
   const handleGoogleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
+    await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        // Usamos window.location.origin para que ele saiba 
-        // dinamicamente se deve voltar para a Vercel ou Localhost
-        redirectTo: window.location.origin,
+        redirectTo: window.location.origin, // Use window.location.origin para redirecionar
       },
     });
-
-    if (error) {
-      console.error("Erro no login:", error.message);
-    }
   };
-  };
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-stone-50 p-6">
-      <div className="flex-grow flex flex-col items-center justify-center w-full">
         {/* Container da Logo */}
         <div className="text-center mb-8">
           <img 
             src="/image.png" 
             alt="Logo Tempo de Ser" 
-            className="max-w-md w-full h-auto mx-auto" // Classe chave para o tamanho da logo
+          className="max-w-md w-full h-auto mx-auto"
           />
         </div>
 
@@ -43,8 +34,6 @@ export default function LoginPage() {
             Entrar com o Google
           </Button>
         </div>
-      </div>
-
       {/* Rodapé */}
       <footer className="text-center py-4">
         <p className="text-sm text-stone-500">Desenvolvido pela Arkhetypo</p>
