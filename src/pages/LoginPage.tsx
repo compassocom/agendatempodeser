@@ -5,13 +5,23 @@ import { Chrome } from 'lucide-react';
 
 export default function LoginPage() {
   const handleGoogleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        // Isso garante que ele volte para a página onde o usuário estava
-        redirectTo: window.location.origin,
+        redirectTo: 'https://agendatempodeser.vercel.app',
+        skipBrowserRedirect: true, // Isso faz o Supabase retornar a URL em vez de tentar abrir sozinho
       },
     });
+
+    if (error) {
+      console.error("Erro no login:", error.message);
+      return;
+    }
+
+    // Forçamos o navegador a ir para a URL de autorização manualmente
+    if (data.url) {
+      window.location.assign(data.url);
+    }
   };
 
   return (
