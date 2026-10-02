@@ -1,9 +1,7 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Input } from "@/Components/ui/Input";
 import { Label } from "@/Components/ui/Label";
 import { Clock, CalendarPlus } from "lucide-react";
-import { Button } from '@/Components/ui/Button';
 import { generateGoogleCalendarLink } from '@/utils/calendar.js';
 
 export default function Schedule({ date, morningSchedule, afternoonSchedule, onMorningChange, onAfternoonChange }) {
@@ -28,16 +26,15 @@ export default function Schedule({ date, morningSchedule, afternoonSchedule, onM
         className="flex-1 bg-stone-50/50"
       />
       {schedule[slot] && (
-        <Button variant="ghost" size="icon" asChild>
-          <a
-            href={generateGoogleCalendarLink(schedule[slot], date, slot)}
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Adicionar ao Google Agenda"
-          >
-            <CalendarPlus className="w-4 h-4 text-stone-500 hover:text-stone-700" />
-          </a>
-        </Button>
+        <a
+          href={generateGoogleCalendarLink(schedule[slot], date, slot)}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Adicionar ao Google Agenda"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-stone-100"
+        >
+          <CalendarPlus className="w-4 h-4 text-stone-500 hover:text-stone-700" />
+        </a>
       )}
     </div>
   );

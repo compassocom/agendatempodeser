@@ -1,16 +1,33 @@
-import React from 'react';
 import { supabase } from '@/supabaseClient';
 import { Button } from '@/Components/ui/Button';
 import { Chrome } from 'lucide-react';
+import { authConfig } from '@/config';
 
 export default function LoginPage() {
   const handleGoogleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: window.location.origin, // Use window.location.origin para redirecionar
-      },
-    });
+    const redirectUrl = authConfig.getRedirectUrl();
+
+    console.log('🔐 Iniciando login...');
+    console.log('🌍 Ambiente:', authConfig.isDevelopment ? 'Desenvolvimento' : 'Produção');
+    console.log('🔗 URL atual:', authConfig.getCurrentUrl());
+    console.log('🎯 URL de redirecionamento:', redirectUrl);
+
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+        },
+      });
+
+      if (error) {
+        console.error('❌ Erro no login:', error);
+      } else {
+        console.log('✅ Login iniciado com sucesso');
+      }
+    } catch (err) {
+      console.error('💥 Erro inesperado no login:', err);
+    }
   };
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-stone-50 p-6">

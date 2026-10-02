@@ -1,4 +1,3 @@
-import React from 'react';
 
 export default function PrintableWeeklyPlanning({ weeklyData }) {
   const getWeekRange = (startDateString) => {
@@ -25,7 +24,7 @@ export default function PrintableWeeklyPlanning({ weeklyData }) {
   const calendarText = weeklyData?.week_calendar?.text || '';
 
   return (
-    <div className="p-12 font-serif bg-white text-black page-break" style={{'--tw-text-opacity': 1, color: 'rgba(0, 0, 0, var(--tw-text-opacity))'}}>
+    <div className="p-12 font-serif bg-white text-black page-break" style={{ color: '#000' }}>
         <header className="text-center mb-8 pb-4 border-b-2 border-gray-400">
             <h1 className="text-4xl font-bold" style={{ color: '#333' }}>
                 {getWeekRange(weeklyData.week_start_date)}

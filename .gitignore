@@ -22,3 +22,9 @@ dist-ssr
 .DS_Store
 .idea
 .vscode
+# Integração com Google Calendar (não usada): contém o segredo do cliente OAuth
+src/services/googleCalendarService.js
+src/Components/GoogleCalendarIntegration
+
+# Backups de variáveis de ambiente
+*.bak

@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-hot-toast';
-import { Calendar, Target, Sun, Lightbulb, ArrowRight, Quote, Loader2, Flame } from "lucide-react";
+import { Calendar, Target, Sun, Lightbulb, ArrowRight, Quote, Loader2, Flame, Bell } from "lucide-react";
 
 // --- IMPORTAÇÕES REAIS ---
 import { User, DailyPage } from "@/Entities/Index";
 import { createPageUrl } from "@/utils";
 import { getTodayQuote } from "@/utils/quotes";
 import { calculateStreak } from "@/utils/stats";
+import { shouldShowNotificationPrompt, dismissNotificationPrompt } from "@/utils/notifications";
 import { Card, CardContent } from "@/Components/ui/Card";
+import { Button } from "@/Components/ui/Button";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -33,6 +35,49 @@ export default function Dashboard() {
 
         const fullName = user.user_metadata?.full_name || 'Ser';
         setUserName(fullName.split(' ')[0]);
+
+        // Verificar se deve mostrar notificação de calendário
+        if (shouldShowNotificationPrompt(user.user_metadata)) {
+          // Mostrar notificação customizada
+          toast((t) => (
+            <div className="flex items-start gap-3">
+              <Bell className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="font-medium text-stone-900">Ativar Notificações de Calendário?</p>
+                <p className="text-sm text-stone-600 mt-1">
+                  Receba lembretes nos horários que você escolher para seus rituais matinais e noturnos.
+                </p>
+                <div className="flex gap-2 mt-3">
+                  <Button 
+                    size="sm" 
+                    variant="default"
+                    onClick={() => {
+                      toast.dismiss(t.id);
+                      navigate(createPageUrl('Profile'));
+                    }}
+                    className="text-xs"
+                  >
+                    Ativar
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => {
+                      toast.dismiss(t.id);
+                      User.updateMyUserData(dismissNotificationPrompt());
+                    }}
+                    className="text-xs"
+                  >
+                    Descartar
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ), {
+            duration: 8000,
+            position: 'top-right',
+          });
+        }
 
         const allDailyPages = await DailyPage.filter({ user_id: user.id });
         

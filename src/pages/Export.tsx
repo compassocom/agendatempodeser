@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 // A importação do supabaseClient deve funcionar após ajustar o tsconfig.json e reiniciar.
 import { supabase } from '@/supabaseClient';
+import { toLocalDateString } from '@/utils/date';
 
 // --- Helper Functions ---
 const displayData = (data, placeholder = "—") => {
@@ -35,31 +36,17 @@ const displayData = (data, placeholder = "—") => {
   return <span className="text-gray-500 dark:text-gray-400">{placeholder}</span>;
 };
 
-// Extrai a resposta de um array de rituais (ex: ["daily_energy:*asd"])
-const getAnswerFromRitual = (ritualArray, key, placeholder = "—") => {
-    if (!Array.isArray(ritualArray) || ritualArray.length === 0) {
-        return <span className="text-gray-500 dark:text-gray-400">{placeholder}</span>;
-    }
-    const entry = ritualArray.find(item => typeof item === 'string' && item.startsWith(key));
-    if (!entry) {
-        return <span className="text-gray-500 dark:text-gray-400">{placeholder}</span>;
-    }
-    const parts = entry.split(':*');
-    return parts.length > 1 ? parts[1] : <span className="text-gray-500 dark:text-gray-400">{placeholder}</span>;
-};
-
-
 const formatMonthTitle = (monthString) => {
     if (!monthString || typeof monthString !== 'string') return "MÊS";
-    const [year, month] = monthString.split('-');
+    const [year, month] = monthString.split('-').map(Number);
     const date = new Date(year, month - 1, 1);
     return date.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).toUpperCase();
 };
 
 const formatWeekTitle = (weekDate) => {
     if (!weekDate) return "SEMANA";
-    const date = new Date(weekDate);
-    date.setDate(date.getDate() + 1); 
+    // Interpreta 'AAAA-MM-DD' como data local (evita deslocamento de fuso horário)
+    const date = new Date(`${String(weekDate).substring(0, 10)}T00:00:00`);
     const day = date.toLocaleDateString('pt-BR', { day: '2-digit' });
     const month = date.toLocaleDateString('pt-BR', { month: 'long' });
     return `SEMANA DE ${day} DE ${month.toUpperCase()}`;
@@ -74,7 +61,7 @@ const Section = ({ title, children, className = '' }) => (
   </div>
 );
 
-const PrintableContainer = ({ id, title, children }) => (
+const PrintableContainer = ({ id, title = '', children }) => (
   <div id={id} className="printable-section p-4 sm:p-8 bg-gray-100 print:bg-white dark:bg-gray-900">
     <div className="max-w-4xl mx-auto">
        {title && <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-8">{title}</h1>}
@@ -138,7 +125,9 @@ const PrintableWeeklyPlanning = ({ data }) => (
 );
 
 const PrintableDailyPage = ({ data }) => {
-    const timeSlots = ["6AM", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12PM", "12:30", "1PM", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30"];
+    // Mesmo formato das chaves salvas pela Página Diária (ex.: "8:00", "13:30")
+    const timeSlots: string[] = [];
+    for (let h = 6; h < 20; h++) timeSlots.push(`${h}:00`, `${h}:30`);
     
     const morningQuestions = [
         { key: 'daily_energy', text: 'Qual é a energia que permeia meu dia hoje?' },
@@ -159,7 +148,7 @@ const PrintableDailyPage = ({ data }) => {
         { key: 'sustaining_habits', text: 'Quais hábitos me sustentaram hoje?' }
     ];
 
-    const agenda = {};
+    const agenda: Record<string, any> = {};
     const parseSchedule = (scheduleObject, targetAgenda) => {
         if (typeof scheduleObject !== 'object' || scheduleObject === null) return;
         for (const timeKey in scheduleObject) {
@@ -195,7 +184,7 @@ const PrintableDailyPage = ({ data }) => {
                         {timeSlots.map((time, index) => (
                             <div key={`${time}-${index}`} className="flex items-center border-b dark:border-gray-700 pb-1">
                                 <span className="w-16 text-sm font-semibold">{time}</span>
-                                <span className="flex-1 text-sm">{displayData(agenda[time.replace('PM','').replace('AM', '')])}</span>
+                                <span className="flex-1 text-sm">{displayData(agenda[time])}</span>
                             </div>
                         ))}
                     </div>
@@ -221,11 +210,11 @@ const PrintableDailyPage = ({ data }) => {
 
 
 export default function App() {
-  const [plannerData, setPlannerData] = useState(null);
-  const [foundDataTypes, setFoundDataTypes] = useState([]);
+  const [plannerData, setPlannerData] = useState<{ dailyPage: any; weeklyPlanning: any; monthlyVision: any } | null>(null);
+  const [foundDataTypes, setFoundDataTypes] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState(toLocalDateString(new Date()));
 
   const handleSearch = async () => {
     setLoading(true);
@@ -254,7 +243,7 @@ export default function App() {
       const dayOfWeek = weekStartDate.getDay();
       const diff = weekStartDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // adjust when day is sunday
       weekStartDate.setDate(diff);
-      const weekStartString = weekStartDate.toISOString().split('T')[0];
+      const weekStartString = toLocalDateString(weekStartDate);
 
       const { data: weeklyPlanningData, error: weeklyError } = await supabase
         .from('weekly_plannings')
@@ -281,7 +270,7 @@ export default function App() {
 
       if (dailyPageData || weeklyPlanningData || monthlyVisionData) {
         setPlannerData(combinedData);
-        const foundTypes = [];
+        const foundTypes: string[] = [];
         if (dailyPageData) foundTypes.push("Diário");
         if (weeklyPlanningData) foundTypes.push("Semanal");
         if (monthlyVisionData) foundTypes.push("Mensal");

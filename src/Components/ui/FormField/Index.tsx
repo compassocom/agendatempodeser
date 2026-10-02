@@ -3,7 +3,7 @@ import { Label } from '@/Components/ui/Label';
 
 type FormFieldProps = {
   label: string;
-  htmlFor: string;
+  htmlFor?: string;
   children: React.ReactNode;
   className?: string;
 };

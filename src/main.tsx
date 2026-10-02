@@ -80,8 +80,7 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
 
 // Componente para envolver páginas com o Layout principal
 const AppLayout = ({ children }: { children: React.ReactElement }) => {
-  const pageName = children.type.name.replace('Page', '').replace('Component', '');
-  return <Layout currentPageName={pageName}>{children}</Layout>;
+  return <Layout>{children}</Layout>;
 };
 
 // Roteador principal da aplicação

@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { DailyPage, User } from "@/Entities/Index";
 import { Button } from "@/Components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
@@ -14,8 +13,8 @@ export default function EveningReflectionPage() {
   const urlParams = new URLSearchParams(window.location.search);
   const date = urlParams.get('date');
 
-  const [dailyEntry, setDailyEntry] = useState(null);
-  const [eveningReflection, setEveningReflection] = useState({});
+  const [dailyEntry, setDailyEntry] = useState<any>(null);
+  const [eveningReflection, setEveningReflection] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -62,7 +61,7 @@ export default function EveningReflectionPage() {
 
       let payload = { ...dailyEntry, evening_reflection: eveningReflection };
       
-      if (dailyEntry.id) {
+      if (dailyEntry?.id) {
         await DailyPage.update(dailyEntry.id, { evening_reflection: eveningReflection });
       } else {
         payload = {

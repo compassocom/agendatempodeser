@@ -1,5 +1,4 @@
 import { supabase } from '@/supabaseClient';
-import { User as SupabaseUser } from '@supabase/supabase-js';
 
 // --- Gestão de Utilizadores ---
 export const User = {
@@ -25,6 +24,11 @@ export const User = {
 
 // --- Função Genérica para Criar Entidades ---
 const createEntity = (tableName: string) => ({
+  get: async (id: string | number) => {
+    const { data, error } = await supabase.from(tableName).select('*').eq('id', id).single();
+    if (error) throw error;
+    return data;
+  },
   filter: async (filters: any = {}) => {
     let query = supabase.from(tableName).select('*');
 

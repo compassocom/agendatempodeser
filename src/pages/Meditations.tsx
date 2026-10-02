@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Meditation } from '@/Entities/Index';
+import { MEDITATIONS } from '@/data/meditations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/Card';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -14,13 +14,7 @@ export default function MeditationsPage() {
   useEffect(() => {
     const fetchMeditations = async () => {
       try {
-        // Usando um mock, já que não temos backend
-        const mockMeditations = [
-          { id: '1', title: 'Respiração Consciente', description: 'Uma pausa de 5 minutos para focar na sua respiração e acalmar a mente.', type: 'Respiração', duration: 5 },
-          { id: '2', title: 'Escaneamento Corporal', description: 'Relaxe cada parte do seu corpo, da cabeça aos pés, liberando a tensão.', type: 'Atenção Plena', duration: 10 },
-          { id: '3', title: 'Visualização da Gratidão', description: 'Conecte-se com o sentimento de gratidão visualizando as coisas boas da sua vida.', type: 'Gratidão', duration: 7 },
-        ];
-        setMeditations(mockMeditations);
+        setMeditations(MEDITATIONS);
       } catch (error) {
         console.error("Erro ao buscar meditações:", error);
       } finally {

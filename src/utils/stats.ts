@@ -23,7 +23,7 @@ export function calculateStreak(dates: string[]): number {
   currentStreak = 1;
   // Percorre as datas para encontrar a sequência
   for (let i = 0; i < sortedTimestamps.length - 1; i++) {
-    const diff = (sortedTimestamps[i] - sortedTimestamps[i + 1]) / oneDay;
+    const diff = Math.round((sortedTimestamps[i] - sortedTimestamps[i + 1]) / oneDay);
     if (diff === 1) {
       currentStreak++;
     } else if (diff > 1) {

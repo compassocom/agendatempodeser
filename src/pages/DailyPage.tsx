@@ -1,8 +1,9 @@
 import React, { useState, useEffect, ReactNode } from "react";
 import toast from 'react-hot-toast';
 import { Sun, Moon, ChevronLeft, ChevronRight, ArrowRight, CheckCircle, Plus, Target, Loader2, Save, CalendarPlus } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { DailyPage, WeeklyPlanning, User } from "@/Entities/Index.ts";
+import { toLocalDateString } from "@/utils/date";
 
 // --- COMPONENTES DE UI ---
 const Button = ({ children, className = '', variant, size, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: string, size?: string }) => ( <button className={`inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-600 disabled:opacity-50 ${variant === 'outline' ? 'border border-stone-300 bg-transparent hover:bg-stone-100 hover:text-stone-800 dark:border-gray-600 dark:text-stone-300 dark:hover:bg-gray-700 dark:hover:text-stone-200' : 'bg-stone-800 text-white hover:bg-stone-900 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200'} ${size === 'icon' ? 'h-10 w-10' : 'h-10 px-4 py-2'} ${size === 'lg' ? 'h-11 px-6 text-base' : ''} ${className}`} {...props}>{children}</button> );
@@ -39,7 +40,7 @@ const SectionSaveButton = ({ onSave }: { onSave: () => Promise<void> }) => {
     );
 };
 
-const generateTimeSlots = (start: number, end: number) => { const slots = []; for (let i = start; i < end; i += 0.5) { const h = Math.floor(i); const m = i % 1 === 0 ? '00' : '30'; slots.push(`${h}:${m}`); } return slots; };
+const generateTimeSlots = (start: number, end: number) => { const slots: string[] = []; for (let i = start; i < end; i += 0.5) { const h = Math.floor(i); const m = i % 1 === 0 ? '00' : '30'; slots.push(`${h}:${m}`); } return slots; };
 const morningSlots = generateTimeSlots(8, 13);
 const afternoonSlots = generateTimeSlots(13, 18);
 
@@ -100,12 +101,14 @@ const Schedule = ({ morningSchedule, afternoonSchedule, onMorningChange, onAfter
     );
 };
 
-const getWeekStart = (date: Date) => { const d = new Date(date); const day = d.getDay(); const diff = d.getDate() - day + (day === 0 ? -6 : 1); return new Date(d.setDate(diff)).toISOString().split('T')[0]; };
+const getWeekStart = (date: Date) => { const d = new Date(date); const day = d.getDay(); const diff = d.getDate() - day + (day === 0 ? -6 : 1); d.setDate(diff); return toLocalDateString(d); };
 const getInitialDailyData = (date: string, userId: string) => ({ id: null, date, user_id: userId, main_priorities: ['', '', ''], tasks_to_do: [''], people_to_connect: ['', '', ''], day_message: '', notes: '', morning_ritual: {}, evening_reflection: {}, morning_schedule: {}, afternoon_schedule: {} });
 
 export default function DailyPageComponent() {
-    // ... (O restante do código permanece o mesmo)
-    const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0]);
+    const [searchParams] = useSearchParams();
+    const dateParam = searchParams.get('date');
+    const [currentDate, setCurrentDate] = useState(dateParam || toLocalDateString(new Date()));
+    useEffect(() => { if (dateParam) setCurrentDate(dateParam); }, [dateParam]);
   const [dailyData, setDailyData] = useState<any>(null);
   const [weeklyPlan, setWeeklyPlan] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -137,7 +140,7 @@ export default function DailyPageComponent() {
     window.open(googleCalendarUrl.toString(), '_blank');
   };
 
-  const handleSaveSection = async (dataToSave: Partial<any>) => { try { const user = await User.me(); if (!user) throw new Error("Utilizador não autenticado."); if (dailyData?.id) { await DailyPage.update(dailyData.id, dataToSave); setDailyData((prev: any) => ({ ...prev, ...dataToSave })); } else { const newRecord = { ...getInitialDailyData(currentDate, user.id), ...dataToSave }; delete newRecord.id; const { data: createdData } = await DailyPage.create(newRecord); if (createdData && createdData.length > 0) { setDailyData((prev: any) => ({ ...prev, ...createdData[0] })); } } toast.success("Secção guardada!"); } catch (error) { console.error("Erro ao salvar:", error); toast.error("Erro ao guardar seção."); throw error; } };
+  const handleSaveSection = async (dataToSave: Partial<any>) => { try { const user = await User.me(); if (!user) throw new Error("Utilizador não autenticado."); if (dailyData?.id) { await DailyPage.update(dailyData.id, dataToSave); setDailyData((prev: any) => ({ ...prev, ...dataToSave })); } else { const newRecord = { ...getInitialDailyData(currentDate, user.id), ...dataToSave }; delete (newRecord as any).id; const { data: createdData } = await DailyPage.create(newRecord); if (createdData && createdData.length > 0) { setDailyData((prev: any) => ({ ...prev, ...createdData[0] })); } } toast.success("Secção guardada!"); } catch (error) { console.error("Erro ao salvar:", error); toast.error("Erro ao guardar seção."); throw error; } };
   const handleSaveAll = async () => { setIsSavingAll(true); const toastId = toast.loading('A guardar página completa...'); try { const { id, ...dataToSave } = dailyData; await handleSaveSection(dataToSave); toast.success("Página guardada com sucesso!", { id: toastId }); } catch (error) { toast.error("Erro ao guardar tudo.", { id: toastId }); } finally { setIsSavingAll(false); } };
   const navigateDate = (direction: number) => { const date = new Date(currentDate); date.setUTCDate(date.getUTCDate() + direction); setCurrentDate(date.toISOString().split('T')[0]); };
   const updateListField = (key: 'main_priorities' | 'tasks_to_do' | 'people_to_connect', index: number, value: string) => { const list = [...dailyData[key]]; list[index] = value; setDailyData({ ...dailyData, [key]: list }); };

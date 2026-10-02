@@ -1,22 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Meditation } from '@/Entities/Index.ts';
+import { MEDITATIONS } from '@/data/meditations';
 import { Button } from '@/Components/ui/Button';
 import { Card, CardContent } from '@/Components/ui/Card';
 import { Loader2, Play, Pause, RefreshCw, Volume2, VolumeX } from 'lucide-react';
 
 export default function MeditationPlayerPage() {
   const location = useLocation();
-  const [meditation, setMeditation] = useState(null);
+  const [meditation, setMeditation] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
 
-  const steps = useRef([]);
-  const timerRef = useRef(null);
+  const steps = useRef<string[]>([]);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const synth = window.speechSynthesis;
-  const utteranceRef = useRef(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -24,9 +25,10 @@ export default function MeditationPlayerPage() {
     if (id) {
       const fetchMeditation = async () => {
         try {
-          const med = await Meditation.get(id);
+          const med = MEDITATIONS.find(m => m.id === id) ?? await Meditation.get(id);
           setMeditation(med);
-          steps.current = med.script.split('\\n\\n').map(s => s.trim()).filter(s => s);
+          // O roteiro pode vir com quebras de linha reais ou com "\n" escapado
+          steps.current = String(med?.script ?? '').split(/(?:\r?\n|\\n){2,}/).map(s => s.trim()).filter(s => s);
         } catch (error) {
           console.error("Erro ao buscar meditação:", error);
         } finally {
@@ -34,6 +36,8 @@ export default function MeditationPlayerPage() {
         }
       };
       fetchMeditation();
+    } else {
+      setIsLoading(false);
     }
 
     return () => {
@@ -50,10 +54,11 @@ export default function MeditationPlayerPage() {
       synth.cancel();
 
       // Speak the current step
-      utteranceRef.current = new SpeechSynthesisUtterance(currentText);
-      utteranceRef.current.lang = 'pt-BR';
-      utteranceRef.current.volume = isMuted ? 0 : 1;
-      synth.speak(utteranceRef.current);
+      const utterance = new SpeechSynthesisUtterance(currentText);
+      utterance.lang = 'pt-BR';
+      utterance.volume = isMuted ? 0 : 1;
+      utteranceRef.current = utterance;
+      synth.speak(utterance);
 
       // Estimate duration and set timer for next step
       const estimatedDuration = Math.max(currentText.length * 100, 3000); // 100ms per char, min 3s
@@ -64,6 +69,7 @@ export default function MeditationPlayerPage() {
     } else if (currentStep >= steps.current.length && steps.current.length > 0) {
       setIsPlaying(false);
     }
+    return () => clearTimeout(timerRef.current);
   }, [isPlaying, currentStep, isMuted, synth]); // Added synth to dependencies
 
   const togglePlay = () => {

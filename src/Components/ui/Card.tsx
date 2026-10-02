@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 // Adicionadas classes dark:* para fundo, borda e sombra
 const Card = ({ children, className = '' }: { children: ReactNode, className?: string }) => (

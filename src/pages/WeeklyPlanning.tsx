@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import toast from 'react-hot-toast';
-import { WeeklyPlanning, User, MonthlyVision } from "@/Entities/Index";
+import { WeeklyPlanning, User } from "@/Entities/Index";
+import { toLocalDateString } from "@/utils/date";
 import { Button } from "@/Components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Textarea } from "@/Components/ui/Textarea";
 import { Input } from "@/Components/ui/Input";
-import { Save, ChevronLeft, ChevronRight, Pin, Loader2 } from "lucide-react";
+import { Save, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 
 // Estado inicial para garantir que todos os campos existam
 const INITIAL_STATE = {
@@ -25,11 +26,11 @@ export default function WeeklyPlanningPage() {
     const today = new Date();
     const day = today.getDay();
     const diff = today.getDate() - day + (day === 0 ? -6 : 1);
-    return new Date(today.setDate(diff)).toISOString().split('T')[0];
+    today.setDate(diff);
+    return toLocalDateString(today);
   });
 
   const [weeklyData, setWeeklyData] = useState<any>(INITIAL_STATE);
-  const [monthlyVision, setMonthlyVision] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -40,13 +41,7 @@ export default function WeeklyPlanningPage() {
         const user = await User.me();
         if (!user) return; // Se não houver usuário, não faz nada
 
-        const currentMonth = weekStartDate.slice(0, 7);
-
-        // --- CORREÇÃO 1: Usar user.id em vez de user.email ---
-        const [weeklyResult, monthlyResult] = await Promise.all([
-          WeeklyPlanning.filter({ week_start_date: weekStartDate, user_id: user.id }),
-          MonthlyVision.filter({ month: currentMonth, user_id: user.id })
-        ]);
+        const weeklyResult = await WeeklyPlanning.filter({ week_start_date: weekStartDate, user_id: user.id });
 
         if (weeklyResult && weeklyResult.length > 0 && weeklyResult[0].id) {
           // Garante que o estado inicial e os dados carregados sejam mesclados
@@ -54,8 +49,6 @@ export default function WeeklyPlanningPage() {
         } else {
           setWeeklyData({ ...INITIAL_STATE, week_start_date: weekStartDate, user_id: user.id });
         }
-
-        setMonthlyVision(monthlyResult && monthlyResult.length > 0 ? monthlyResult[0] : null);
 
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
@@ -118,9 +111,9 @@ export default function WeeklyPlanningPage() {
   };
 
   const navigateWeek = (direction: number) => {
-    const date = new Date(weekStartDate);
+    const date = new Date(weekStartDate + 'T00:00:00');
     date.setDate(date.getDate() + (direction * 7));
-    setWeekStartDate(date.toISOString().split('T')[0]);
+    setWeekStartDate(toLocalDateString(date));
   };
 
   const getWeekRange = () => {

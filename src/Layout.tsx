@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "./contexts/ThemeContext";
 
-export default function Layout({ children, currentPageName }: { children: React.ReactNode, currentPageName: string }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   // A linha abaixo USA o 'useTheme'. O aviso desaparecerá.
   const { theme, toggleTheme } = useTheme();
 

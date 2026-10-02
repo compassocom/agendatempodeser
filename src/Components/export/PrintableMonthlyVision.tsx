@@ -1,4 +1,3 @@
-import React from 'react';
 
 export default function PrintableMonthlyVision({ visionData }: { visionData: any }) {
   const monthName = visionData.month 
