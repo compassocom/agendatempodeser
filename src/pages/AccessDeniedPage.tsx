@@ -14,7 +14,8 @@ export default function AccessDeniedPage() {
         <ShieldAlert className="w-16 h-16 mx-auto text-amber-500" />
         <h1 className="text-2xl font-bold text-stone-900 dark:text-stone-100">Acesso Restrito</h1>
         <p className="text-stone-600 dark:text-stone-100">
-          O seu email não está na lista de utilizadores autorizados. Se acredita que isto é um erro, por favor, contacte o administrador.
+          Seu email ainda não está na lista de pessoas com acesso à agenda. Se acha que isso é um engano, fale com quem
+          te convidou ou com a Arkhetypo.
         </p>
         <Button onClick={handleLogout} variant="outline" className="w-full">
           Voltar para o Login

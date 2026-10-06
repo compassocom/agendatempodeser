@@ -5,18 +5,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Textarea } from "@/Components/ui/Textarea";
 import { Label } from "@/Components/ui/Label";
 import { Moon, Save, ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import toast from "react-hot-toast";
+import { toLocalDateString } from "@/utils/date";
+import { useUnsavedWarning, isDirty } from "@/hooks/useUnsavedWarning";
 
 export default function EveningReflectionPage() {
   const navigate = useNavigate();
-  const urlParams = new URLSearchParams(window.location.search);
-  const date = urlParams.get('date');
+  const [searchParams] = useSearchParams();
+  // sem ?date= no endereço, é a escrita de hoje
+  const date = searchParams.get('date') || toLocalDateString(new Date());
 
   const [dailyEntry, setDailyEntry] = useState<any>(null);
   const [eveningReflection, setEveningReflection] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [savedReflection, setSavedReflection] = useState<Record<string, string>>({});
+  const dirty = !isLoading && isDirty(eveningReflection, savedReflection);
+  useUnsavedWarning(dirty);
 
   useEffect(() => {
     const loadDailyEntry = async () => {
@@ -32,11 +39,14 @@ export default function EveningReflectionPage() {
         if (entry.length > 0) {
           setDailyEntry(entry[0]);
           setEveningReflection(entry[0].evening_reflection || {});
+          setSavedReflection(entry[0].evening_reflection || {});
         } else {
           setDailyEntry({ date });
           setEveningReflection({});
+          setSavedReflection({});
         }
       } catch (error) {
+        toast.error("Erro ao carregar a escrita noturna.");
         console.error("Erro ao carregar página diária:", error);
       } finally {
         setIsLoading(false);
@@ -49,12 +59,12 @@ export default function EveningReflectionPage() {
   }, [date]);
 
   const handleSave = async () => {
-    if (!date) return;
     setIsSaving(true);
+    const toastId = toast.loading("Salvando escrita noturna...");
     try {
       const user = await User.me();
       if (!user) {
-        console.error("Usuário não logado.");
+        toast.error("Sua sessão expirou. Entre de novo.", { id: toastId });
         setIsSaving(false);
         return;
       }
@@ -71,15 +81,18 @@ export default function EveningReflectionPage() {
         };
         await DailyPage.create(payload);
       }
+      setSavedReflection(eveningReflection);
+      toast.success("Escrita noturna salva!", { id: toastId });
       navigate(createPageUrl(`DailyPage?date=${date}`));
     } catch (error) {
+      toast.error("Não foi possível salvar. Tente de novo.", { id: toastId });
       console.error("Erro ao salvar reflexão noturna:", error);
     } finally {
       setIsSaving(false);
     }
   };
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: string, value: string) => {
     setEveningReflection(prev => ({ ...prev, [field]: value }));
   };
 
@@ -135,7 +148,10 @@ export default function EveningReflectionPage() {
       <div className="flex justify-between items-center pt-6">
         <Button
           variant="outline"
-          onClick={() => navigate(createPageUrl(`DailyPage?date=${date}`))}
+          onClick={() => {
+            if (dirty && !window.confirm('Sua escrita ainda não foi salva. Voltar mesmo assim?')) return;
+            navigate(createPageUrl(`DailyPage?date=${date}`));
+          }}
           className="bg-white dark:bg-black"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />

@@ -29,8 +29,8 @@ export default function Dashboard() {
         }
         
         if (!user.user_metadata?.hasCompletedOnboarding) {
-          // navigate(createPageUrl('Introduction'));
-          // return;
+          navigate(createPageUrl('Introduction'), { replace: true });
+          return;
         }
 
         const fullName = user.user_metadata?.full_name || 'Ser';
@@ -43,9 +43,9 @@ export default function Dashboard() {
             <div className="flex items-start gap-3">
               <Bell className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
               <div className="flex-1">
-                <p className="font-medium text-stone-900">Ativar Notificações de Calendário?</p>
+                <p className="font-medium text-stone-900">Quer lembretes dos seus rituais?</p>
                 <p className="text-sm text-stone-600 mt-1">
-                  Receba lembretes nos horários que você escolher para seus rituais matinais e noturnos.
+                  Adicione ao seu Google Agenda um aviso diário para o ritual da manhã e a escrita da noite.
                 </p>
                 <div className="flex gap-2 mt-3">
                   <Button 
@@ -57,7 +57,7 @@ export default function Dashboard() {
                     }}
                     className="text-xs"
                   >
-                    Ativar
+                    Configurar
                   </Button>
                   <Button 
                     size="sm" 
@@ -68,7 +68,7 @@ export default function Dashboard() {
                     }}
                     className="text-xs"
                   >
-                    Descartar
+                    Agora não
                   </Button>
                 </div>
               </div>
@@ -145,7 +145,7 @@ export default function Dashboard() {
                 <div>
                   <h3 className="font-bold text-xl text-stone-900 dark:text-stone-100">Sequência de {streak} {streak === 1 ? 'dia' : 'dias'}!</h3>
                   <p className="text-stone-600 dark:text-stone-300 mt-1">
-                    Continue o ótimo trabalho a construir o seu hábito.
+                    Continue assim: o hábito está se formando.
                   </p>
                 </div>
               </CardContent>

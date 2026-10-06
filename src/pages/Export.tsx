@@ -3,6 +3,7 @@ import { useState } from 'react';
 // A importação do supabaseClient deve funcionar após ajustar o tsconfig.json e reiniciar.
 import { supabase } from '@/supabaseClient';
 import { toLocalDateString } from '@/utils/date';
+import { ALL_SLOTS } from '@/utils/schedule';
 
 // --- Helper Functions ---
 const displayData = (data, placeholder = "—") => {
@@ -125,9 +126,8 @@ const PrintableWeeklyPlanning = ({ data }) => (
 );
 
 const PrintableDailyPage = ({ data }) => {
-    // Mesmo formato das chaves salvas pela Página Diária (ex.: "8:00", "13:30")
-    const timeSlots: string[] = [];
-    for (let h = 6; h < 20; h++) timeSlots.push(`${h}:00`, `${h}:30`);
+    // os mesmos horários da Página Diária (ex.: "8:00", "13:30")
+    const timeSlots = ALL_SLOTS;
     
     const morningQuestions = [
         { key: 'daily_energy', text: 'Qual é a energia que permeia meu dia hoje?' },

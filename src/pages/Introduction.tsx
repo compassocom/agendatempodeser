@@ -1,10 +1,27 @@
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/Card';
 import { Button } from '@/Components/ui/Button';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { BookOpen, Calendar, Target, Sun, Lightbulb, Printer, Share, HelpCircle, ArrowLeft, ShoppingCart } from 'lucide-react';
+import { User } from '@/Entities/Index';
+import { BookOpen, Calendar, Target, Sun, Lightbulb, Printer, Share, HelpCircle, ArrowRight, ShoppingCart, Loader2 } from 'lucide-react';
 
 export default function IntroductionPage() {
+  const navigate = useNavigate();
+  const [firstVisit, setFirstVisit] = useState(false);
+  const [starting, setStarting] = useState(false);
+
+  useEffect(() => {
+    User.me().then((user) => setFirstVisit(!!user && !user.user_metadata?.hasCompletedOnboarding)).catch(() => {});
+  }, []);
+
+  // na primeira visita, "Começar" registra que a pessoa já viu a introdução
+  const start = async () => {
+    setStarting(true);
+    if (firstVisit) await User.updateMyUserData({ hasCompletedOnboarding: true }).catch(() => {});
+    navigate(createPageUrl(firstVisit ? 'DailyPage' : 'Dashboard'));
+  };
+
   const sections = [
     {
       icon: Calendar,
@@ -32,12 +49,12 @@ export default function IntroductionPage() {
     {
         icon: Share,
         title: 'Exportar para Calendário',
-        description: 'Na página diária, use o ícone ao lado de cada tarefa para adicionar ao Google Agenda ou o botão "Exportar" para baixar um arquivo .ics compatível com qualquer calendário.'
+        description: 'Na Agenda do Dia, use o ícone ao lado de cada compromisso para adicioná-lo ao Google Agenda, ou o botão "Exportar para calendário (.ics)" para baixar o dia inteiro e importar em qualquer calendário. No Perfil, adicione lembretes diários dos seus rituais.'
     },
     {
         icon: Printer,
         title: 'Imprimir suas Páginas',
-        description: 'Acesse a página "Exportar" no menu para selecionar um período e gerar uma versão para impressão de suas anotações, perfeita para guardar ou revisar.'
+        description: 'Acesse a página "Exportar" no menu, escolha uma data e gere uma versão para impressão das suas anotações, ótima para arquivar ou revisar.'
     }
   ];
 
@@ -74,7 +91,7 @@ export default function IntroductionPage() {
         </CardContent>
       </Card>
       
-       <Card className="bg-white dark:bg=white/5 border-stone-200 dark:border-stone-700">
+       <Card className="bg-white dark:bg-white/5 border-stone-200 dark:border-stone-700">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-xl"><HelpCircle className="w-6 h-6" />Dicas de Uso</CardTitle>
         </CardHeader>
@@ -94,8 +111,8 @@ export default function IntroductionPage() {
       <Card className="bg-stone-800 dark:bg-stone-100 border-stone-700">
         <CardContent className="p-6 flex flex-col md:flex-row items-center justify-between gap-6 text-left">
           <div>
-            <h3 className="text-xl font-bold text-black">Leve a jornada para o papel</h3>
-            <p className="text-stone-500 mt-1 max-w-lg">Adquira a versão física da agenda "Tempo de Ser" para uma experiência de escrita mais profunda e offline.</p>
+            <h3 className="text-xl font-bold text-white dark:text-stone-900">Leve a jornada para o papel</h3>
+            <p className="text-stone-300 dark:text-stone-600 mt-1 max-w-lg">Adquira a versão física da agenda "Tempo de Ser" para uma experiência de escrita mais profunda e offline.</p>
           </div>
           <a href="https://www.amazon.com.br/TEMPO-DE-SER-reflex%C3%B5es-autoconhecimento/dp/B0CK27YV27" target="_blank" rel="noopener noreferrer" className="flex-shrink-0 mt-4 md:mt-0">
             <Button size="lg" className="bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 hover:bg-stone-200 w-full md:w-auto">
@@ -107,12 +124,11 @@ export default function IntroductionPage() {
       </Card>
       
       <div className="text-center pt-6">
-          <Link to={createPageUrl("Dashboard")}>
-            <Button variant="outline">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Voltar para o Dashboard
-            </Button>
-          </Link>
+          <Button size="lg" onClick={start} disabled={starting}>
+            {starting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+            {firstVisit ? 'Começar minha jornada' : 'Ir para o início'}
+            <ArrowRight className="w-4 h-4 ml-2" />
+          </Button>
       </div>
 
     </div>

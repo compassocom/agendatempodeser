@@ -8,33 +8,39 @@ import { Sun, Save, ArrowLeft, Loader2 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import toast from 'react-hot-toast';
+import { toLocalDateString } from "@/utils/date";
+import { useUnsavedWarning, isDirty } from "@/hooks/useUnsavedWarning";
 
 export default function MorningRitualPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const date = searchParams.get('date');
+  // sem ?date= no endereço, é o ritual de hoje
+  const date = searchParams.get('date') || toLocalDateString(new Date());
 
   const [dailyEntry, setDailyEntry] = useState<any>(null);
-  const [morningRitual, setMorningRitual] = useState({});
+  const [morningRitual, setMorningRitual] = useState<Record<string, string>>({});
+  const [savedRitual, setSavedRitual] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const dirty = !isLoading && isDirty(morningRitual, savedRitual);
+  useUnsavedWarning(dirty);
 
   useEffect(() => {
     const loadDailyEntry = async () => {
-      if (!date) return;
       setIsLoading(true);
       try {
         const user = await User.me();
         if (!user) return;
 
-        // Corrigido para usar user.id
         const result = await DailyPage.filter({ date, user_id: user.id });
         if (result && result.length > 0 && result[0].id) {
           setDailyEntry(result[0]);
           setMorningRitual(result[0].morning_ritual || {});
+          setSavedRitual(result[0].morning_ritual || {});
         } else {
-          setDailyEntry(null); // Indica que não há registro existente
+          setDailyEntry(null); // ainda não há registro deste dia
           setMorningRitual({});
+          setSavedRitual({});
         }
       } catch (error) {
         toast.error("Erro ao carregar dados.");
@@ -46,7 +52,6 @@ export default function MorningRitualPage() {
   }, [date]);
 
   const handleSave = async () => {
-    if (!date) return;
     setIsSaving(true);
     const toastId = toast.loading("Salvando ritual matinal...");
     try {
@@ -62,15 +67,16 @@ export default function MorningRitualPage() {
         // Cria um novo registro
         const payload = {
           date: date,
-          user_id: user.id, // Corrigido para usar user.id
+          user_id: user.id,
           ...dataToSave
         };
         await DailyPage.create(payload);
       }
-      toast.success("Ritual salvo com sucesso!", { id: toastId });
+      setSavedRitual(morningRitual);
+      toast.success("Ritual salvo!", { id: toastId });
       navigate(createPageUrl(`DailyPage?date=${date}`));
     } catch (error) {
-      toast.error("Erro ao salvar.", { id: toastId });
+      toast.error("Não foi possível salvar. Tente de novo.", { id: toastId });
       console.error("Erro ao salvar Ritual Matinal:", error);
     } finally {
       setIsSaving(false);
@@ -132,7 +138,10 @@ export default function MorningRitualPage() {
       <div className="flex justify-between items-center pt-6">
         <Button
           variant="outline"
-          onClick={() => navigate(createPageUrl(`DailyPage?date=${date}`))}
+          onClick={() => {
+            if (dirty && !window.confirm('Seu ritual ainda não foi salvo. Voltar mesmo assim?')) return;
+            navigate(createPageUrl(`DailyPage?date=${date}`));
+          }}
           className="bg-white"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />

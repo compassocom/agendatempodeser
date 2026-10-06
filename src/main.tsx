@@ -27,6 +27,7 @@ import IntroductionPage from '@/pages/Introduction';
 import MeditationsPage from '@/pages/Meditations'; 
 import MeditationPlayerPage from '@/pages/MeditationPlayer';
 import AccessDeniedPage from '@/pages/AccessDeniedPage';
+import { PrivacyPage, TermsPage } from '@/pages/LegalPages';
 
 // Componente para proteger rotas
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
@@ -91,6 +92,8 @@ function App() {
         {/* Rotas Públicas */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/access-denied" element={<AccessDeniedPage />} />
+        <Route path="/privacidade" element={<PrivacyPage />} />
+        <Route path="/termos" element={<TermsPage />} />
         
         {/* Rotas Protegidas */}
         <Route path="/*" element={

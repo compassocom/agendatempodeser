@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import toast from 'react-hot-toast';
-import { User, DailyPage, MonthlyVision, WeeklyPlanning } from "@/Entities/Index";
+import { User, DailyPage, MonthlyVision, WeeklyPlanning, exportMyData, deleteMyData } from "@/Entities/Index";
+import { downloadFile } from "@/utils/calendar";
 import { Button } from "@/Components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Input } from "@/Components/ui/Input";
 import { Textarea } from "@/Components/ui/Textarea";
-import { Save, LogOut, Award, Loader2, Flame, Bell, BellOff } from "lucide-react";
+import { Save, LogOut, Award, Loader2, Flame, Bell, CalendarPlus, Download, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { dailyRitualUrl } from "@/utils/calendar";
 import FormField from "@/Components/ui/FormField/Index.tsx";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -82,7 +85,7 @@ export default function ProfilePage() {
 
   const handleSave = async () => {
     setIsSaving(true);
-    const toastId = toast.loading('A guardar perfil...');
+    const toastId = toast.loading('Salvando perfil...');
     try {
       const dataToSave = {
         ...profileData,
@@ -90,7 +93,7 @@ export default function ProfilePage() {
           enabled: notificationSettings.enabled,
           morningTime: notificationSettings.morningTime,
           eveningTime: notificationSettings.eveningTime,
-        }).notifications,
+        }),
       };
 
       await User.updateMyUserData(dataToSave);
@@ -104,14 +107,53 @@ export default function ProfilePage() {
     }
   };
 
+  // abre o Google Agenda com o evento diário pronto e guarda o horário escolhido
+  const addReminder = (time: string, title: string, page: string) => {
+    const link = `${window.location.origin}/${page}`;
+    window.open(dailyRitualUrl(time, title, `Hora do seu ritual na Agenda Tempo de Ser: ${link}`), '_blank', 'noopener');
+    User.updateMyUserData(updateNotificationSettings({ ...notificationSettings, enabled: true })).catch(() => {});
+  };
+
+  const [dataBusy, setDataBusy] = useState<'export' | 'delete' | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState('');
+
+  const handleExport = async () => {
+    setDataBusy('export');
+    try {
+      const data = await exportMyData();
+      downloadFile(`agenda-tempo-de-ser-meus-dados-${toLocalDateString(new Date())}.json`, JSON.stringify(data, null, 2), 'application/json');
+    } catch (error) {
+      console.error("Erro ao exportar:", error);
+      toast.error("Não foi possível preparar o arquivo. Tente de novo.");
+    } finally {
+      setDataBusy(null);
+    }
+  };
+
+  const handleDeleteData = async () => {
+    setDataBusy('delete');
+    const toastId = toast.loading('Apagando seus dados...');
+    try {
+      await deleteMyData();
+      toast.success('Seus dados foram apagados.', { id: toastId });
+      setConfirmDelete('');
+      await loadProfile();
+    } catch (error) {
+      console.error("Erro ao apagar:", error);
+      toast.error('Não foi possível apagar tudo. Nada foi perdido sem aviso: tente de novo ou fale com o suporte.', { id: toastId });
+    } finally {
+      setDataBusy(null);
+    }
+  };
+
   const handleLogout = async () => {
-    const toastId = toast.loading('A terminar sessão...');
+    const toastId = toast.loading('Saindo...');
     try {
         await User.logout();
-        toast.success('Sessão terminada!', { id: toastId });
+        toast.success('Você saiu da conta.', { id: toastId });
         navigate('/login');
     } catch (error) {
-        toast.error('Erro ao terminar sessão.', { id: toastId });
+        toast.error('Não foi possível sair. Tente de novo.', { id: toastId });
     }
   };
 
@@ -133,7 +175,7 @@ export default function ProfilePage() {
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       <div className="text-center">
         <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100">Meu Perfil</h1>
-        <p className="text-stone-600 dark:text-stone-100 mt-2">Gerencie as suas informações e veja o seu progresso na jornada.</p>
+        <p className="text-stone-600 dark:text-stone-100 mt-2">Gerencie suas informações e veja seu progresso na jornada.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-6">
@@ -199,66 +241,42 @@ export default function ProfilePage() {
           <Card className="bg-white dark:bg-black dark:text-white">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                {notificationSettings.enabled ? <Bell className="w-5 h-5 text-amber-500" /> : <BellOff className="w-5 h-5 text-stone-400" />}
-                Notificações de Calendário
+                <Bell className="w-5 h-5 text-amber-500" />
+                Lembretes dos Rituais
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-3 rounded-lg bg-stone-50 dark:bg-stone-900">
-                <div>
-                  <p className="font-medium text-stone-900 dark:text-stone-100">
-                    {notificationSettings.enabled ? 'Notificações Ativas' : 'Notificações Desativadas'}
-                  </p>
-                  <p className="text-sm text-stone-600 dark:text-stone-400">
-                    {notificationSettings.enabled
-                      ? 'Você receberá lembretes para seus rituais'
-                      : 'Ative para receber lembretes'}
-                  </p>
-                </div>
-                <Button
-                  size="sm"
-                  variant={notificationSettings.enabled ? "default" : "outline"}
-                  onClick={() => setNotificationSettings({ ...notificationSettings, enabled: !notificationSettings.enabled })}
-                >
-                  {notificationSettings.enabled ? 'Desativar' : 'Ativar'}
-                </Button>
-              </div>
-
-              {notificationSettings.enabled && (
-                <div className="space-y-4 border-t pt-4">
-                  <FormField label="Ritual da Manhã" htmlFor="morning-time">
+              <p className="text-sm text-stone-600 dark:text-stone-300">
+                Escolha os horários e adicione ao seu Google Agenda um evento que se repete todos os dias. O próprio
+                Google Agenda avisa você na hora, no celular e no computador.
+              </p>
+              {([
+                ['morningTime', 'Ritual da Manhã', 'Ritual Matinal · Tempo de Ser', 'MorningRitual'],
+                ['eveningTime', 'Escrita da Noite', 'Escrita Noturna · Tempo de Ser', 'EveningReflection'],
+              ] as const).map(([key, label, title, page]) => (
+                <div key={key} className="flex flex-wrap items-end gap-3 rounded-lg bg-stone-50 p-3 dark:bg-stone-900">
+                  <FormField label={label} htmlFor={key}>
                     <Input
-                      id="morning-time"
+                      id={key}
                       type="time"
-                      value={notificationSettings.morningTime}
-                      onChange={(e) => setNotificationSettings({ ...notificationSettings, morningTime: e.target.value })}
-                      className="max-w-xs"
+                      value={notificationSettings[key]}
+                      onChange={(e) => setNotificationSettings({ ...notificationSettings, [key]: e.target.value })}
+                      className="w-32"
                     />
-                    <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-                      Hora para notificação do ritual matinal
-                    </p>
                   </FormField>
-
-                  <FormField label="Reflexão da Noite" htmlFor="evening-time">
-                    <Input
-                      id="evening-time"
-                      type="time"
-                      value={notificationSettings.eveningTime}
-                      onChange={(e) => setNotificationSettings({ ...notificationSettings, eveningTime: e.target.value })}
-                      className="max-w-xs"
-                    />
-                    <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-                      Hora para notificação da reflexão noturna
-                    </p>
-                  </FormField>
-
-                  <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-                    <p className="text-sm text-blue-900 dark:text-blue-100">
-                      💡 Quando chegar a hora, você receberá uma notificação para confirmar a adição do evento ao Google Calendar.
-                    </p>
-                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addReminder(notificationSettings[key], title, page)}
+                  >
+                    <CalendarPlus className="w-4 h-4 mr-2" />
+                    Adicionar ao Google Agenda
+                  </Button>
                 </div>
-              )}
+              ))}
+              <p className="text-xs text-stone-500 dark:text-stone-400">
+                Mudou de horário? Edite ou apague o evento antigo no Google Agenda e adicione de novo.
+              </p>
             </CardContent>
           </Card>
 
@@ -271,10 +289,45 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
+          <Card className="bg-white dark:bg-black dark:text-white">
+            <CardHeader><CardTitle>Seus dados</CardTitle></CardHeader>
+            <CardContent className="space-y-5 text-sm">
+              <div className="space-y-2">
+                <p className="text-stone-600 dark:text-stone-300">Baixe um arquivo com tudo o que a agenda guarda sobre você.</p>
+                <Button variant="outline" size="sm" onClick={handleExport} disabled={dataBusy !== null}>
+                  {dataBusy === 'export' ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
+                  Baixar meus dados (JSON)
+                </Button>
+              </div>
+              <div className="space-y-2 border-t pt-4 dark:border-gray-700">
+                <p className="text-stone-600 dark:text-stone-300">
+                  Apagar todas as suas anotações (dias, rituais, semanas, meses, visão do futuro) e o que você escreveu no
+                  perfil. Não dá para desfazer: baixe seus dados antes, se quiser guardar.
+                </p>
+                <FormField label="Para confirmar, digite APAGAR" htmlFor="confirm-delete">
+                  <Input id="confirm-delete" value={confirmDelete} onChange={(e) => setConfirmDelete(e.target.value)} autoComplete="off" className="max-w-xs" />
+                </FormField>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDeleteData}
+                  disabled={dataBusy !== null || confirmDelete.trim().toUpperCase() !== 'APAGAR'}
+                  className="border-red-300 text-red-700 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950"
+                >
+                  {dataBusy === 'delete' ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
+                  Apagar meus dados
+                </Button>
+                <p className="text-xs text-stone-500 dark:text-stone-400">
+                  Para excluir também o seu acesso, veja a <Link to="/privacidade" className="underline">Política de Privacidade</Link>.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="space-y-2">
             <Button onClick={handleSave} disabled={isSaving} size="lg" className="w-full">
               {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-              {isSaving ? 'A guardar...' : 'Salvar Perfil'}
+              {isSaving ? 'Salvando...' : 'Salvar Perfil'}
             </Button>
             <Button onClick={handleLogout} variant="outline" className="w-full">
               <LogOut className="w-4 h-4 mr-2" />

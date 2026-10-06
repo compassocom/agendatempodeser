@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Textarea } from "@/Components/ui/Textarea";
 import { Input } from "@/Components/ui/Input";
 import { Save, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { useUnsavedWarning, isDirty } from "@/hooks/useUnsavedWarning";
 
 // Estado inicial para garantir que todos os campos existam
 const INITIAL_STATE = {
@@ -33,6 +34,10 @@ export default function WeeklyPlanningPage() {
   const [weeklyData, setWeeklyData] = useState<any>(INITIAL_STATE);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [savedData, setSavedData] = useState<any>(INITIAL_STATE);
+  const dirty = !isLoading && isDirty(weeklyData, savedData);
+  useUnsavedWarning(dirty);
+  const confirmLeave = () => !dirty || window.confirm('Há alterações não salvas nesta semana. Sair mesmo assim?');
 
   useEffect(() => {
     const loadData = async () => {
@@ -45,9 +50,13 @@ export default function WeeklyPlanningPage() {
 
         if (weeklyResult && weeklyResult.length > 0 && weeklyResult[0].id) {
           // Garante que o estado inicial e os dados carregados sejam mesclados
-          setWeeklyData({ ...INITIAL_STATE, ...weeklyResult[0] });
+          const loaded = { ...INITIAL_STATE, ...weeklyResult[0] };
+          setWeeklyData(loaded);
+          setSavedData(loaded);
         } else {
-          setWeeklyData({ ...INITIAL_STATE, week_start_date: weekStartDate, user_id: user.id });
+          const empty = { ...INITIAL_STATE, week_start_date: weekStartDate, user_id: user.id };
+          setWeeklyData(empty);
+          setSavedData(empty);
         }
 
       } catch (error) {
@@ -80,6 +89,7 @@ export default function WeeklyPlanningPage() {
         // Se já existe um ID, atualizamos o registro.
         const { id, ...dataToUpdate } = weeklyData;
         await WeeklyPlanning.update(id, { ...dataToUpdate, user_id: user.id, week_start_date: weekStartDate });
+        setSavedData(weeklyData);
 
       } else {
         // --- CRIAR (CREATE) ---
@@ -99,6 +109,7 @@ export default function WeeklyPlanningPage() {
         
         // Atualiza o estado com os dados retornados, incluindo o novo ID
         setWeeklyData(createdData[0]);
+        setSavedData(createdData[0]);
       }
       
       toast.success('Planejamento salvo!', { id: toastId });
@@ -111,6 +122,7 @@ export default function WeeklyPlanningPage() {
   };
 
   const navigateWeek = (direction: number) => {
+    if (!confirmLeave()) return;
     const date = new Date(weekStartDate + 'T00:00:00');
     date.setDate(date.getDate() + (direction * 7));
     setWeekStartDate(toLocalDateString(date));
@@ -152,7 +164,14 @@ export default function WeeklyPlanningPage() {
           <Button variant="outline" size="icon" onClick={() => navigateWeek(1)} className="rounded-full bg-white/50 "><ChevronRight className="w-4 h-4" /></Button>
         </div>
         <div className="flex justify-center">
-          <Input type="date" value={weekStartDate} onChange={(e) => setWeekStartDate(e.target.value)} className="w-fit bg-white/80 " />
+          <Input type="date" value={weekStartDate} onChange={(e) => {
+            if (!e.target.value || !confirmLeave()) return;
+            // qualquer dia escolhido leva à segunda-feira daquela semana
+            const picked = new Date(e.target.value + 'T00:00:00');
+            const day = picked.getDay();
+            picked.setDate(picked.getDate() - day + (day === 0 ? -6 : 1));
+            setWeekStartDate(toLocalDateString(picked));
+          }} className="w-fit bg-white/80 " />
         </div>
       </div>
 
