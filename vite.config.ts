@@ -9,7 +9,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
-  base: '/',
+  // pasta onde o app vai morar: '/' na Vercel, '/agendatempodeser/' na HostGator (npm run build:hostgator)
+  base: process.env.BASE_PATH || '/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',

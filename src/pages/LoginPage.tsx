@@ -4,6 +4,7 @@ import { supabase } from '@/supabaseClient';
 import { Button } from '@/Components/ui/Button';
 import { AlertCircle, Chrome, Loader2 } from 'lucide-react';
 import { authConfig } from '@/config';
+import { asset } from '@/utils/base';
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +34,7 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-stone-50 dark:bg-gray-900 p-6">
       <div className="text-center mb-8">
-        <img src="/image.png" alt="Logo Tempo de Ser" className="max-w-md w-full h-auto mx-auto" />
+        <img src={asset("image.png")} alt="Logo Tempo de Ser" className="max-w-md w-full h-auto mx-auto" />
       </div>
 
       <div className="w-full max-w-xs space-y-4">

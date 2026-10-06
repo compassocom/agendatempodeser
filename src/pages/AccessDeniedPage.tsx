@@ -1,11 +1,12 @@
 import { User } from '@/Entities/Index';
+import { appUrl } from '@/utils/base';
 import { Button } from '@/Components/ui/Button';
 import { ShieldAlert } from 'lucide-react';
 
 export default function AccessDeniedPage() {
   const handleLogout = async () => {
     await User.logout();
-    window.location.href = '/login'; // Redireciona para a página de login
+    window.location.href = appUrl('login');
   };
 
   return (

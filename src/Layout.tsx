@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { useTheme } from "./contexts/ThemeContext";
+import { asset } from "@/utils/base";
 
 const NAV = [
   { title: "Início", page: "Dashboard", icon: BookOpen },
@@ -64,7 +65,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <header className="bg-white/80 backdrop-blur-sm border-b border-stone-200 sticky top-0 z-50 dark:bg-gray-800/80 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
           <Link to={createPageUrl("Dashboard")} title="Ir para o início" className="flex-shrink-0">
-            <img src="/image.png" alt="Logo Tempo de Ser" className="h-12 sm:h-16 w-auto" />
+            <img src={asset("image.png")} alt="Logo Tempo de Ser" className="h-12 sm:h-16 w-auto" />
           </Link>
 
           {/* telas largas: ícones */}
@@ -122,14 +123,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <footer className="bg-stone-800 text-stone-300 py-12 dark:bg-gray-950">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
           <div className="space-y-4">
-            <img src="/image.png" alt="Logo Tempo de Ser" className="h-16 w-auto mx-auto md:mx-0" />
+            <img src={asset("image.png")} alt="Logo Tempo de Ser" className="h-16 w-auto mx-auto md:mx-0" />
             <p className="text-sm text-stone-400 font-light">
               Sua jornada de autoconhecimento<br /> e planejamento consciente.
             </p>
           </div>
 
           <div className="space-y-4 md:flex md:flex-col md:items-center">
-            <img src="/arkhetypo-logo.png" alt="Logo Arkhetypo" className="h-16 w-auto mx-auto" />
+            <img src={asset("arkhetypo-logo.png")} alt="Logo Arkhetypo" className="h-16 w-auto mx-auto" />
             <p className="text-sm text-stone-400 font-light md:text-center">
               Desenvolvido pela Arkhetypo.<br />
               Uma ferramenta para alinhar suas ações<br /> com seu propósito.

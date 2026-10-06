@@ -87,7 +87,7 @@ const AppLayout = ({ children }: { children: React.ReactElement }) => {
 // Roteador principal da aplicação
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
       <Routes>
         {/* Rotas Públicas */}
         <Route path="/login" element={<LoginPage />} />

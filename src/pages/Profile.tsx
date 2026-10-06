@@ -9,6 +9,7 @@ import { Textarea } from "@/Components/ui/Textarea";
 import { Save, LogOut, Award, Loader2, Flame, Bell, CalendarPlus, Download, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { dailyRitualUrl } from "@/utils/calendar";
+import { appUrl } from "@/utils/base";
 import FormField from "@/Components/ui/FormField/Index.tsx";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -109,7 +110,7 @@ export default function ProfilePage() {
 
   // abre o Google Agenda com o evento diário pronto e guarda o horário escolhido
   const addReminder = (time: string, title: string, page: string) => {
-    const link = `${window.location.origin}/${page}`;
+    const link = appUrl(page);
     window.open(dailyRitualUrl(time, title, `Hora do seu ritual na Agenda Tempo de Ser: ${link}`), '_blank', 'noopener');
     User.updateMyUserData(updateNotificationSettings({ ...notificationSettings, enabled: true })).catch(() => {});
   };

@@ -1,6 +1,7 @@
 import { ReactNode, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LEGAL } from '@/legal';
+import { asset } from '@/utils/base';
 
 // Páginas públicas (abrem sem login): Política de Privacidade e Termos de Uso.
 
@@ -13,7 +14,7 @@ const Shell = ({ title, children }: { title: string; children: ReactNode }) => {
     <div className="min-h-screen bg-stone-50 text-stone-800 dark:bg-gray-900 dark:text-stone-200">
       <header className="border-b border-stone-200 bg-white/80 dark:border-gray-700 dark:bg-gray-800/80">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
-          <Link to="/"><img src="/image.png" alt="Agenda Tempo de Ser" className="h-12 w-auto" /></Link>
+          <Link to="/"><img src={asset("image.png")} alt="Agenda Tempo de Ser" className="h-12 w-auto" /></Link>
           <nav className="flex gap-4 text-sm">
             <Link to="/privacidade" className="hover:underline">Privacidade</Link>
             <Link to="/termos" className="hover:underline">Termos</Link>
